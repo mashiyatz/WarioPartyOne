@@ -38,6 +38,7 @@ public class ActionButton : MonoBehaviour
         if (transform.parent.CompareTag("Paparazzi") && collision.gameObject.CompareTag("Celebrity"))
         {
             inRange = true;
+            Debug.Log("UPDATE");
         }
 
         if (transform.parent.CompareTag("Celebrity") && collision.gameObject.CompareTag("Goal"))
@@ -45,11 +46,6 @@ public class ActionButton : MonoBehaviour
             inRange = true;
             target = collision.gameObject;
         }
-
-/*        if (transform.parent.CompareTag("Paparazzi") && collision.gameObject.CompareTag("Funds"))
-        {
-            inRange = true;
-        }*/
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -64,33 +60,5 @@ public class ActionButton : MonoBehaviour
             inRange = false;
             target = null;
         }
-
-/*        if (transform.parent.CompareTag("Paparazzi") && collision.gameObject.CompareTag("Funds"))
-        {
-            inRange = false;
-        }*/
     }
-
-
-    /*    private void OnTriggerStay2D(Collider2D collision)
-        {
-            if (transform.parent.CompareTag("Paparazzi") && collision.gameObject.CompareTag("Celebrity"))
-            {
-                if (Input.GetKeyDown(pm.actionKey))
-                {
-                    pm.UpdateScore();
-                    StartCoroutine(Reload());
-                }
-            }
-
-            if (transform.parent.CompareTag("Celebrity") && collision.gameObject.CompareTag("Goal"))
-            {
-                if (Input.GetKeyDown(pm.actionKey))
-                {
-                    pm.UpdateScore();
-                    Destroy(collision.gameObject);
-                }
-            }
-        }*/
-
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2493692745719463763}
   - component: {fileID: 2493692745719463761}
   - component: {fileID: 2493692745719463760}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: ActionCone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -257,12 +257,8 @@ MonoBehaviour:
   actionKey: 303
   rotationSpeed: 360
   movementSpeed: 2
-  scoreTextbox: {fileID: 0}
-  fundsTextbox: {fileID: 0}
   score: 0
-  funds: 0
-  panel: {fileID: 0}
-  winStatus: {fileID: 0}
+  resources: 0
 --- !u!58 &2493692747067552347
 CircleCollider2D:
   m_ObjectHideFlags: 0

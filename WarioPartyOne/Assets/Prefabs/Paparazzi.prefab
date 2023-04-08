@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 243849041335211641}
   - component: {fileID: 243849041335211638}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Triangle (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -212,12 +212,8 @@ MonoBehaviour:
   actionKey: 304
   rotationSpeed: 360
   movementSpeed: 2
-  scoreTextbox: {fileID: 0}
-  fundsTextbox: {fileID: 0}
   score: 0
-  funds: 0
-  panel: {fileID: 0}
-  winStatus: {fileID: 0}
+  resources: 0
 --- !u!58 &243849041503337222
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -244,7 +240,7 @@ GameObject:
   m_Component:
   - component: {fileID: 243849041681453576}
   - component: {fileID: 243849041681453577}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Triangle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -328,7 +324,7 @@ GameObject:
   m_Component:
   - component: {fileID: 243849041858626503}
   - component: {fileID: 243849041858626500}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Triangle (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -414,7 +410,7 @@ GameObject:
   - component: {fileID: 243849041946134468}
   - component: {fileID: 243849041946134469}
   - component: {fileID: 243849041946134471}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: ActionCone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
