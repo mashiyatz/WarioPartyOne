@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2493692745719463763}
   - component: {fileID: 2493692745719463761}
   - component: {fileID: 2493692745719463760}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ActionCone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -142,7 +142,7 @@ GameObject:
   - component: {fileID: 2493692747067552327}
   - component: {fileID: 2493692747067552346}
   - component: {fileID: 2493692747067552347}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Celeb
   m_TagString: Celebrity
   m_Icon: {fileID: 0}
@@ -158,7 +158,7 @@ Transform:
   m_GameObject: {fileID: 2493692747067552326}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.5, y: 0.5, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2493692745719463762}
@@ -256,7 +256,7 @@ MonoBehaviour:
   rightKey: 108
   actionKey: 303
   rotationSpeed: 360
-  movementSpeed: 5
+  movementSpeed: 2
   scoreTextbox: {fileID: 0}
   fundsTextbox: {fileID: 0}
   score: 0

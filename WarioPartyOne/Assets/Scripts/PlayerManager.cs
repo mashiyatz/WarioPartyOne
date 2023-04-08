@@ -50,11 +50,14 @@ public class PlayerManager : MonoBehaviour
         if (score >= 3)
         {
             panel.SetActive(true);
-            winStatus.text = $"{gameObject.name} wins"; 
+            winStatus.text = $"{gameObject.name} wins";
             winStatus.gameObject.SetActive(true);
             StartCoroutine(RestartGame());
         }
+    }
 
+    private void FixedUpdate()
+    {
         if (StartPanelAnimation.canMove)
         {
             float angle;
