@@ -38,7 +38,6 @@ public class ActionButton : MonoBehaviour
         if (transform.parent.CompareTag("Paparazzi") && collision.gameObject.CompareTag("Celebrity"))
         {
             inRange = true;
-            Debug.Log("UPDATE");
         }
 
         if (transform.parent.CompareTag("Celebrity") && collision.gameObject.CompareTag("Goal"))
