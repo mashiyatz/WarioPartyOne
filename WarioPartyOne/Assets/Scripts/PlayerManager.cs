@@ -14,7 +14,7 @@ public class PlayerManager : MonoBehaviour
     public float movementSpeed;
 
     public int score;
-    public int resources;
+    public float resources;
 
     private Rigidbody2D rb;
 
@@ -31,9 +31,10 @@ public class PlayerManager : MonoBehaviour
         
     }
 
-    public void UpdateFunds(int amt)
+    public void UpdateResource(int amt)
     {
         resources += amt;
+        Mathf.Clamp(resources, 0, 3);
     }
 
     private void FixedUpdate()

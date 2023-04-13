@@ -20,8 +20,11 @@ public class GameStart : MonoBehaviour
 
     private PlayerManager celeb;
     private PlayerManager paparazzi;
-    public TextMeshProUGUI celebScore;
-    public TextMeshProUGUI papaScore;
+
+    public TextMeshProUGUI celebScoreTextbox;
+    public TextMeshProUGUI papaScoreTextbox;
+    public TextMeshProUGUI celebResourceTextbox;
+    public TextMeshProUGUI papaResourceTextbox;
     public GameObject objectGenerator;
 
     [SerializeField] private Vector3 papaStartPos; 
@@ -29,8 +32,6 @@ public class GameStart : MonoBehaviour
 
     void Start()
     {
-        /*        paparazzi = Instantiate(celebPrefab, papaStartPos, Quaternion.Euler(new Vector3(0, 0, 180))).GetComponent<PlayerManager>();
-                celeb = Instantiate(celebPrefab, celebStartPos, Quaternion.Euler(new Vector3(0, 0, 0))).GetComponent<PlayerManager>();*/
         InstantiatePlayers();
 
         celeb.enabled = false;
@@ -74,8 +75,7 @@ public class GameStart : MonoBehaviour
         }
         else if (currentState == GameState.PLAY)
         {
-            celebScore.text = $"Fame: {celeb.score}";
-            papaScore.text = $"Followers: {paparazzi.score}";
+            UpdateUI();
 
             if (celeb.score == 3 || paparazzi.score == 3)
             {
@@ -118,6 +118,15 @@ public class GameStart : MonoBehaviour
                 StartCoroutine(RestartGame());
             }
         }
+
+    }
+
+    void UpdateUI()
+    {
+        celebScoreTextbox.text = $"Fame: {celeb.score}";
+        papaScoreTextbox.text = $"Followers: {paparazzi.score}";
+        celebResourceTextbox.text = $"Anonymity: {celeb.resources / 3 * 100:F1}%";
+        papaResourceTextbox.text = $"Battery: {paparazzi.resources / 3 * 100:F1}%";
 
     }
 

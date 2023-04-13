@@ -17,18 +17,33 @@ public class ActionButton : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(pm.actionKey) && inRange)
+        if (Input.GetKeyDown(pm.actionKey))
         {
-            pm.UpdateScore();
-
-            if (transform.parent.CompareTag("Paparazzi"))
+            if (transform.parent.CompareTag("Paparazzi") && inRange)
             {
-                StartCoroutine(Reload());
+                if (target.CompareTag("Battery"))
+                {
+                    if (pm.resources < 3) pm.UpdateResource(2);
+                    Destroy(target);
+                }
+                else if (target.CompareTag("Celebrity") && pm.resources >= 1)
+                {
+                    pm.UpdateScore();
+                    pm.UpdateResource(-1);
+                    StartCoroutine(Reload());
+                }
+            } else if (transform.parent.CompareTag("Paparazzi") && !inRange && pm.resources >= 1)
+            {
+                pm.UpdateResource(-1);
             }
 
-            if (transform.parent.CompareTag("Celebrity"))
+            if (transform.parent.CompareTag("Celebrity") && inRange)
             {
-                Destroy(target);
+                if (target.CompareTag("Goal"))
+                {
+                    pm.UpdateScore();
+                    Destroy(target);
+                }
             }
         }
     }
@@ -38,9 +53,16 @@ public class ActionButton : MonoBehaviour
         if (transform.parent.CompareTag("Paparazzi") && collision.gameObject.CompareTag("Celebrity"))
         {
             inRange = true;
+            target = collision.gameObject;
         }
 
         if (transform.parent.CompareTag("Celebrity") && collision.gameObject.CompareTag("Goal"))
+        {
+            inRange = true;
+            target = collision.gameObject;
+        }
+
+        if (transform.parent.CompareTag("Paparazzi") && collision.gameObject.CompareTag("Battery"))
         {
             inRange = true;
             target = collision.gameObject;
@@ -52,9 +74,16 @@ public class ActionButton : MonoBehaviour
         if (transform.parent.CompareTag("Paparazzi") && collision.gameObject.CompareTag("Celebrity"))
         {
             inRange = false;
+            target = null;
         }
 
         if (transform.parent.CompareTag("Celebrity") && collision.gameObject.CompareTag("Goal"))
+        {
+            inRange = false;
+            target = null;
+        }
+
+        if (transform.parent.CompareTag("Paparazzi") && collision.gameObject.CompareTag("Battery"))
         {
             inRange = false;
             target = null;

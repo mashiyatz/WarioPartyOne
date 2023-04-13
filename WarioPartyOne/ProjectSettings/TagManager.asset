@@ -7,6 +7,7 @@ TagManager:
   - Paparazzi
   - Celebrity
   - Goal
+  - Battery
   layers:
   - Default
   - TransparentFX
