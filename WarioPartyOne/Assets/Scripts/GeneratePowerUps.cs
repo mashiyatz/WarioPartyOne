@@ -14,6 +14,9 @@ public class GeneratePowerUps : MonoBehaviour
     public Tilemap tilemapObstacle;
     private List<Vector3> pathTilePositions;
 
+    public Zones zones;
+    private Coroutine co;
+
     void Start()
     {
         pathTilePositions = new List<Vector3>();
@@ -36,7 +39,25 @@ public class GeneratePowerUps : MonoBehaviour
 
     void GenerateNewGoal()
     {
-        Instantiate(goalPrefab, pathTilePositions[Random.Range(0, pathTilePositions.Count)] + new Vector3(.25f, .25f, 0), Quaternion.identity, goalParentTransform);
+        if (co != null) StopCoroutine(co);
+
+        Vector3Int pos = zones.ActivateZone();
+        Vector3 worldPlace = tilemapPath.CellToWorld(pos);
+        // Instantiate(goalPrefab, pathTilePositions[Random.Range(0, pathTilePositions.Count)] + new Vector3(.125f, .125f, 0), Quaternion.identity, goalParentTransform);
+        GameObject go = Instantiate(goalPrefab, worldPlace + new Vector3(.125f, .125f, 0), Quaternion.identity, goalParentTransform);
+        
+        co = StartCoroutine(DeactivateGoal(go));
+    }
+
+    IEnumerator DeactivateGoal(GameObject goalObject)
+    {
+        yield return new WaitForSeconds(15.0f);
+        if (goalObject != null)
+        {
+            zones.DeactivateZone();
+            Destroy(goalObject);
+        }
+        
     }
 
     IEnumerator GeneratePaparazziPowerUp()
@@ -46,7 +67,7 @@ public class GeneratePowerUps : MonoBehaviour
         {
             if (paparazziPowerUpTransform.childCount == 0)
             {
-                Instantiate(batteryPrefab, pathTilePositions[Random.Range(0, pathTilePositions.Count)] + new Vector3(.25f, .25f, 0), Quaternion.identity, paparazziPowerUpTransform);
+                Instantiate(batteryPrefab, pathTilePositions[Random.Range(0, pathTilePositions.Count)] + new Vector3(.125f, .125f, 0), Quaternion.Euler(new Vector3(0, 0, 35f)), paparazziPowerUpTransform);
             }
             yield return new WaitForSecondsRealtime(15);
         }
@@ -56,7 +77,13 @@ public class GeneratePowerUps : MonoBehaviour
     {
         if (goalParentTransform.childCount == 0)
         {
+            zones.DeactivateZone();
             GenerateNewGoal();
+        } 
+        
+        if (goalParentTransform.GetChild(0).GetComponent<SpriteRenderer>().enabled == false)
+        {
+            zones.DeactivateZone();
         }
     }
 }
