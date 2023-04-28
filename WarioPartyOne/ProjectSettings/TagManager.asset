@@ -8,6 +8,10 @@ TagManager:
   - Celebrity
   - Goal
   - Battery
+  - Speed
+  - CameraUpgrade
+  - Disguise
+  - NoCarZone
   layers:
   - Default
   - TransparentFX

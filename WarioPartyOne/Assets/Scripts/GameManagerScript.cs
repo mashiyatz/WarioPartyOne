@@ -36,11 +36,20 @@ public class GameManagerScript : MonoBehaviour
     public Transform stars;
     public Transform hearts;
     public Transform battery;
+    public Image lens;
+    public Image disguise;
+    public Image celebFrame;
+    public Image paparazziFrame;
+
+    public Color[] paparazziPalette;
+    public Color[] celebPalette;
 
     public GameObject objectGenerator;
 
     public Tilemap tilemapPath;
     public Image flashPanel;
+    public Image photo;
+    public Sprite[] photoSprites;
 
     [SerializeField] private Vector3Int papaStartPos; 
     [SerializeField] private Vector3Int celebStartPos; 
@@ -72,7 +81,7 @@ public class GameManagerScript : MonoBehaviour
         Vector3 papaPos = tilemapPath.CellToWorld(papaStartPos) + new Vector3(0.125f, 0.125f, 0);
         Vector3 celebPos = tilemapPath.CellToWorld(celebStartPos) + new Vector3(0.125f, 0.125f, 0);
 
-        paparazzi = Instantiate(paparazziPrefab, papaPos, Quaternion.Euler(new Vector3(0, 0, 180))).GetComponent<PlayerManager>();
+        paparazzi = Instantiate(paparazziPrefab, papaPos, Quaternion.Euler(new Vector3(0, 0, 0))).GetComponent<PlayerManager>();
         celeb = Instantiate(celebPrefab, celebPos, Quaternion.Euler(new Vector3(0, 0, 0))).GetComponent<PlayerManager>();
         paparazziAction = paparazzi.GetComponentInChildren<ActionButton>();
         celebAction = celeb.GetComponentInChildren<ActionButton>();
@@ -155,6 +164,55 @@ public class GameManagerScript : MonoBehaviour
         UpdateBattery();
         UpdateHearts();
         UpdateStars();
+        UpdatePowerUpUI();
+        UpdateSpeedUI();
+    }
+
+    void UpdateSpeedUI()
+    {
+        if (paparazzi.movementSpeed > 1)
+        {
+            paparazziFrame.color = Color.Lerp(
+                paparazziPalette[0],
+                paparazziPalette[1],
+                Mathf.Abs(Mathf.Sin(Time.time * 10)));
+        } else if (paparazzi.movementSpeed == 1)
+        {
+            paparazziFrame.color = paparazziPalette[0];
+        }
+
+        if (celeb.movementSpeed > 1)
+        {
+            celebFrame.color = Color.Lerp(
+                celebPalette[0],
+                celebPalette[1],
+                Mathf.Abs(Mathf.Sin(Time.time * 10)));
+        } else if (celeb.movementSpeed == 1)
+        {
+            celebFrame.color = celebPalette[0];
+        }
+    }
+
+    void UpdatePowerUpUI()
+    {
+        if (paparazzi.GetComponent<StanItems>().CheckIfUsingTelephoto())
+        {
+            lens.color = new Color(1, 1, 1, 1);
+            lens.transform.Rotate(new Vector3(0, 0, Time.deltaTime * 72f));
+
+        } else
+        {
+            lens.color = new Color(1, 1, 1, 0.4f);
+        }
+
+        if (celeb.GetComponent<CelebItems>().CheckIfVisible())
+        {
+            disguise.color = new Color(1, 1, 1, 0.4f);
+        } else
+        {
+            disguise.color = new Color(1, 1, 1, 1);
+            disguise.transform.Rotate(new Vector3(0, 0, Time.deltaTime * 72f));
+        }
     }
 
     void UpdateBattery()
@@ -190,24 +248,32 @@ public class GameManagerScript : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void FlashCamera()
+    public void FlashCamera(bool isGoodPhoto)
     {
-        StartCoroutine(PlayCameraFlash());
+        StartCoroutine(PlayCameraFlash(isGoodPhoto));
         flashPanel.gameObject.GetComponent<AudioSource>().Play();
     }
 
-    IEnumerator PlayCameraFlash()
+    IEnumerator PlayCameraFlash(bool isGoodPhoto)
     {
         float startTime = Time.time;
+        float angle = Random.Range(-25, 25);
+        if (isGoodPhoto) photo.sprite = photoSprites[0];
+        else photo.sprite = photoSprites[1];
+        photo.transform.rotation = Quaternion.Euler(Vector3.forward * angle);
+
+
         while (Time.time - startTime <= 0.2f)
         {
             flashPanel.color = Color.Lerp(flashPanel.color, new Color(1, 1, 1, 1), (Time.time - startTime) / 0.2f);
+            photo.color = Color.Lerp(photo.color, new Color(1, 1, 1, 1), (Time.time - startTime) / 0.2f);
             yield return null;
         }
         startTime = Time.time;
         while (Time.time - startTime <= 0.2f)
         {
             flashPanel.color = Color.Lerp(flashPanel.color, new Color(1, 1, 1, 0), (Time.time - startTime) / 0.2f);
+            photo.color = Color.Lerp(photo.color, new Color(1, 1, 1, 0), (Time.time - startTime) / 0.2f);
             yield return null;
         }
     }

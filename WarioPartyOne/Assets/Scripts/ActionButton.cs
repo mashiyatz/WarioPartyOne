@@ -11,6 +11,8 @@ public class ActionButton : MonoBehaviour
     private float timeOfPress;
 
     private float reloadTime = 2f;
+    private bool isReloading = false;
+
     private float activationTime = 1f;
 
     private void Start()
@@ -20,8 +22,8 @@ public class ActionButton : MonoBehaviour
 
     IEnumerator Reload()
     {
-        gameObject.GetComponent<Collider2D>().enabled = false;
         pm.slider.gameObject.SetActive(true);
+        isReloading = true;
 
         float timer = 0;
         while (timer <= reloadTime)
@@ -31,7 +33,7 @@ public class ActionButton : MonoBehaviour
             yield return null;
         }
         pm.slider.gameObject.SetActive(false);
-        gameObject.GetComponent<Collider2D>().enabled = true;
+        isReloading = false;
     }
 
     private void Update()
@@ -39,23 +41,21 @@ public class ActionButton : MonoBehaviour
 
         if (transform.parent.CompareTag("Paparazzi"))
         {
-            if (Input.GetKeyDown(pm.actionKey))
+            if (Input.GetKeyDown(pm.actionKey) && !isReloading)
             {
 
                 if (pm.resources >= 1 && gameObject.GetComponent<Collider2D>().enabled)
                 {
-                    gmScript.FlashCamera();
-                    if (inRange)
+                    if (inRange && target.GetComponent<CelebItems>().CheckIfVisible())
                     {
-                        if (target.CompareTag("Celebrity") && pm.resources >= 1)
-                        {
-                            pm.UpdateScore();
-                            pm.UpdateResource(-1);
-                            StartCoroutine(Reload());
-                        }
+                        gmScript.FlashCamera(true);
+                        pm.UpdateScore();
+                        pm.UpdateResource(-1);
+                        StartCoroutine(Reload());
                     }
                     else
                     {
+                        gmScript.FlashCamera(false);
                         pm.UpdateResource(-1);
                         StartCoroutine(Reload());
                     }
