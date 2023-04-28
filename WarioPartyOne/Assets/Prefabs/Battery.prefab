@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 1166367089026916757}
   - component: {fileID: 8097082309493771835}
   - component: {fileID: -7514151734147020347}
-  - component: {fileID: 4684281516902857659}
   - component: {fileID: 4957946128428963887}
+  - component: {fileID: 5256820504859531758}
   m_Layer: 0
   m_Name: Battery
   m_TagString: Battery
@@ -135,18 +135,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &4684281516902857659
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1166367089026916756}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09d514f70e6f9d0448cc3ba79c9aff39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!82 &4957946128428963887
 AudioSource:
   m_ObjectHideFlags: 0
@@ -243,3 +231,15 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5256820504859531758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1166367089026916756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bda2799ddb3dc942b70dc7613644c04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

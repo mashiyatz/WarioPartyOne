@@ -25,14 +25,31 @@ public class PlayerManager : MonoBehaviour
     public Slider slider;
     private Camera cam;
 
+    private Animator anim;
+    public string[] animStates;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
         cam = Camera.main;
         score = 0;
         resources = 3;
         SetButtonConfig();
         SetSlider();
+    }
+
+    public void StartSpeedUp()
+    {
+        StopCoroutine(SpeedUp());
+        StartCoroutine(SpeedUp());
+    }
+
+    IEnumerator SpeedUp()
+    {
+        movementSpeed = 2;
+        yield return new WaitForSeconds(5f);
+        movementSpeed = 1;
     }
 
     void SetSlider()
@@ -107,24 +124,37 @@ public class PlayerManager : MonoBehaviour
         
         // angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         angle = Vector2.SignedAngle(Vector2.up, lastDirection);
-        Vector3 targetRotation = new Vector3(0, 0, angle);
-        Quaternion lookTo = Quaternion.Euler(targetRotation);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, lookTo, rotationSpeed * Time.deltaTime);
-        
+
+        if (gameObject.CompareTag("Paparazzi"))
+        {
+            Vector3 targetRotation = new Vector3(0, 0, angle);
+            Quaternion lookTo = Quaternion.Euler(targetRotation);
+            transform.GetChild(0).rotation = Quaternion.RotateTowards(transform.GetChild(0).rotation, lookTo, rotationSpeed * Time.deltaTime);
+            // transform.rotation = Quaternion.RotateTowards(transform.rotation, lookTo, rotationSpeed * Time.deltaTime);
+        }
+
+        if (anim != null)
+        {
+            float convertedAngle = angle + 180;
+
+            Debug.Log(convertedAngle);
+            if (convertedAngle >= 315 || convertedAngle < 45) anim.Play(animStates[1]);
+            else if (convertedAngle >= 45 && convertedAngle < 135)
+            {
+                GetComponent<SpriteRenderer>().flipX = true;
+                anim.Play(animStates[3]);
+            }
+            else if (convertedAngle >= 135 && convertedAngle < 225) anim.Play(animStates[5]);
+            else if (convertedAngle >= 225 && convertedAngle < 315)
+            {
+                GetComponent<SpriteRenderer>().flipX = false;
+                anim.Play(animStates[3]);
+            }
+        }
 
         moveTowards += movementSpeed * Time.deltaTime * direction;
         rb.MovePosition(moveTowards);
 
         slider.transform.position = cam.WorldToScreenPoint(rb.position + 0.25f * Vector2.up); 
     }
-
-/*    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (transform.CompareTag("Paparazzi") && collision.gameObject.CompareTag("Battery"))
-        {
-            if (resources < 3) UpdateResource(2);
-            Destroy(collision.gameObject);
-        }
-    }*/
-
 }
