@@ -137,7 +137,7 @@ public class PlayerManager : MonoBehaviour
         {
             float convertedAngle = angle + 180;
 
-            Debug.Log(convertedAngle);
+            //Debug.Log(convertedAngle);
             if (convertedAngle >= 315 || convertedAngle < 45) anim.Play(animStates[1]);
             else if (convertedAngle >= 45 && convertedAngle < 135)
             {

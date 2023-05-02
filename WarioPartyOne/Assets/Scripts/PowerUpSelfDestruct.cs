@@ -4,6 +4,22 @@ using UnityEngine;
 
 public class PowerUpSelfDestruct : MonoBehaviour
 {
+    private Vector3 minSize;
+    private Vector3 maxSize;
+
+    private void Start()
+    {
+        minSize = new Vector3(0.20f, 0.20f, 1);
+        maxSize = new Vector3(0.35f, 0.35f, 1);
+    }
+
+    private void Update()
+    {
+        transform.localScale = Vector3.Lerp(minSize, maxSize, Mathf.Abs(Mathf.Sin(Time.time * 4f)));    
+    }
+
+
+
     public void StartSelfDestruct()
     {
         StartCoroutine(PlayAudioThenDestroy());

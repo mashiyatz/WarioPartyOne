@@ -10,7 +10,7 @@ public class ActionButton : MonoBehaviour
     private GameManagerScript gmScript;
     private float timeOfPress;
 
-    private float reloadTime = 2f;
+    private float reloadTime = 2.5f;
     private bool isReloading = false;
 
     private float activationTime = 1f;
@@ -43,7 +43,7 @@ public class ActionButton : MonoBehaviour
         {
             if (Input.GetKeyDown(pm.actionKey) && !isReloading)
             {
-
+                Debug.Log("check");
                 if (pm.resources >= 1 && gameObject.GetComponent<Collider2D>().enabled)
                 {
                     if (inRange && target.GetComponent<CelebItems>().CheckIfVisible())
@@ -88,6 +88,11 @@ public class ActionButton : MonoBehaviour
             }
 
         }
+    }
+
+    public bool CheckIfInRange()
+    {
+        return inRange;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

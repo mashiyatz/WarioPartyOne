@@ -216,7 +216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98ec74f8fc4ff954a8ac43450dc18b30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonConfig: 0
+  buttonConfig: 2
   upKey: 108
   downKey: 106
   leftKey: 105
