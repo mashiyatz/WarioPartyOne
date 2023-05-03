@@ -26,12 +26,6 @@ public class GameManagerScript : MonoBehaviour
     private ActionButton celebAction;
     private ActionButton paparazziAction;
 
-    // text ui version
-    public TextMeshProUGUI celebScoreTextbox;
-    public TextMeshProUGUI papaScoreTextbox;
-    public TextMeshProUGUI celebResourceTextbox;
-    public TextMeshProUGUI papaResourceTextbox;
-
     // graphic ui
     public Transform stars;
     public Transform hearts;
@@ -45,11 +39,13 @@ public class GameManagerScript : MonoBehaviour
     public Color[] celebPalette;
 
     public GameObject objectGenerator;
+    public GameObject carGenerator;
 
     public Tilemap tilemapPath;
     public Image flashPanel;
     public Image photo;
     public Sprite[] photoSprites;
+    public GoalManager goalManager;
 
     [SerializeField] private Vector3Int papaStartPos; 
     [SerializeField] private Vector3Int celebStartPos; 
@@ -69,6 +65,7 @@ public class GameManagerScript : MonoBehaviour
         celebUI.SetActive(false);
         papaUI.SetActive(false);
         objectGenerator.SetActive(false);
+        carGenerator.SetActive(false);
 
         currentState = GameState.START;
     }
@@ -103,6 +100,7 @@ public class GameManagerScript : MonoBehaviour
                 celebAction.enabled = true;
                 paparazziAction.enabled = true;
                 objectGenerator.SetActive(true);
+                carGenerator.SetActive(true);
 
                 currentState = GameState.PLAY;
             }
@@ -136,19 +134,6 @@ public class GameManagerScript : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
             {
-                /*
-                startText.SetActive(true);
-                celebUI.SetActive(false);
-                papaUI.SetActive(false);
-
-                celeb.enabled = false;
-                paparazzi.enabled = false;
-
-                InstantiatePlayers();
-                
-                currentState = GameState.START;
-                 */
-
                 StartCoroutine(RestartGame());
             }
         }
@@ -157,10 +142,6 @@ public class GameManagerScript : MonoBehaviour
 
     void UpdateUI()
     {
-        /*        celebScoreTextbox.text = $"Fame: {celeb.score}";
-                papaScoreTextbox.text = $"Followers: {paparazzi.score}";
-                celebResourceTextbox.text = $"Anonymity: {celeb.resources / 3 * 100:F1}%";
-                papaResourceTextbox.text = $"Battery: {paparazzi.resources / 3 * 100:F1}%";*/
         UpdateBattery();
         UpdateHearts();
         UpdateStars();

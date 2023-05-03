@@ -18,8 +18,6 @@ public class PowerUpSelfDestruct : MonoBehaviour
         transform.localScale = Vector3.Lerp(minSize, maxSize, Mathf.Abs(Mathf.Sin(Time.time * 4f)));    
     }
 
-
-
     public void StartSelfDestruct()
     {
         StartCoroutine(PlayAudioThenDestroy());

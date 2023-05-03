@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GenerateCars : MonoBehaviour
 {
-    public GameObject carPrefab;
+    public GameObject[] carPrefabs;
     public float angleAxis;
 
     void Update()
@@ -12,7 +12,7 @@ public class GenerateCars : MonoBehaviour
         if (transform.childCount == 0)
         {
             Instantiate(
-                carPrefab, 
+                carPrefabs[Random.Range(0, carPrefabs.Length)], 
                 transform.position,
                 Quaternion.AngleAxis(angleAxis, Vector3.forward),
                 transform

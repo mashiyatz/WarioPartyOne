@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2493692745719463761}
   - component: {fileID: 2493692745719463760}
   - component: {fileID: 6918342419540968342}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ActionCone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,8 @@ GameObject:
   - component: {fileID: 2331033742390910594}
   - component: {fileID: 3022462316427720354}
   - component: {fileID: 7196772915164156656}
-  m_Layer: 3
+  - component: {fileID: 4602892528061658228}
+  m_Layer: 8
   m_Name: Celeb
   m_TagString: Celebrity
   m_Icon: {fileID: 0}
@@ -216,7 +217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98ec74f8fc4ff954a8ac43450dc18b30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonConfig: 2
+  buttonConfig: 0
   upKey: 108
   downKey: 106
   leftKey: 105
@@ -284,3 +285,17 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4602892528061658228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2493692747067552326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d81a6734479d17543b005e49d574af76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rate: 10
+  lifeTime: 0.2

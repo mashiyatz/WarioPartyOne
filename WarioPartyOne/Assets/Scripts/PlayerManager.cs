@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Tilemaps;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -28,6 +29,11 @@ public class PlayerManager : MonoBehaviour
     private Animator anim;
     public string[] animStates;
 
+    private Coroutine collisionCoroutine;
+
+    // set tile
+    private Tilemap pathmap;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -48,8 +54,10 @@ public class PlayerManager : MonoBehaviour
     IEnumerator SpeedUp()
     {
         movementSpeed = 2;
+        GetComponent<AfterImage>().Activate(true);
         yield return new WaitForSeconds(5f);
         movementSpeed = 1;
+        GetComponent<AfterImage>().Activate(false);
     }
 
     void SetSlider()
@@ -107,18 +115,30 @@ public class PlayerManager : MonoBehaviour
         resources = r;
     }
 
+    private void FixPositionToTile()
+    {
+        rb.MovePosition(pathmap.CellToWorld(pathmap.WorldToCell(transform.position)));
+    }
+
     private void FixedUpdate()
     {
         float angle;
         Vector2 direction = Vector2.zero;
         Vector2 moveTowards = transform.position;
 
-        if (Input.GetKey(upKey)) direction += Vector2.up;
-        if (Input.GetKey(downKey)) direction += Vector2.down;
-        if (Input.GetKey(leftKey)) direction += Vector2.left;
-        if (Input.GetKey(rightKey)) direction += Vector2.right;
+        // direction with normalization
+        /*        if (Input.GetKey(upKey)) direction += Vector2.up;
+                if (Input.GetKey(downKey)) direction += Vector2.down;
+                if (Input.GetKey(leftKey)) direction += Vector2.left;
+                if (Input.GetKey(rightKey)) direction += Vector2.right;
 
-        direction.Normalize();
+                direction.Normalize();*/
+        //
+
+        if (Input.GetKey(upKey)) direction = Vector2.up;
+        else if (Input.GetKey(downKey)) direction = Vector2.down;
+        else if (Input.GetKey(leftKey)) direction = Vector2.left;
+        else if (Input.GetKey(rightKey)) direction = Vector2.right;
 
         if (direction != Vector2.zero) lastDirection = direction;
         
@@ -152,9 +172,33 @@ public class PlayerManager : MonoBehaviour
             }
         }
 
+        // switching to tile-based movement:
+        // convert tile to world and MovePosition to tile
+        // on GetKey move in direction one tile 
+        // startcoroutine only when reach destination location
+
+
+
         moveTowards += movementSpeed * Time.deltaTime * direction;
         rb.MovePosition(moveTowards);
 
         slider.transform.position = cam.WorldToScreenPoint(rb.position + 0.25f * Vector2.up); 
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Car"))
+        {
+            if (collisionCoroutine == null) StartCoroutine(CarCollisionCooldown(collision.collider));
+        }
+    }
+
+    IEnumerator CarCollisionCooldown(Collider2D collider)
+    {
+        yield return new WaitForSeconds(1.0f);
+        if (collider != null)
+        {
+            Physics2D.IgnoreCollision(gameObject.GetComponent<Collider2D>(), collider, true);
+        }
     }
 }

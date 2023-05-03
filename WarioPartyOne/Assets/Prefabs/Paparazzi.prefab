@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 218489853058641754}
   - component: {fileID: 6041682760152216873}
   - component: {fileID: 7069124997307634255}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Triangle2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -116,6 +116,7 @@ GameObject:
   - component: {fileID: 243849041503337222}
   - component: {fileID: -2598363063300757324}
   - component: {fileID: 8493728394077467434}
+  - component: {fileID: 4444778804206206119}
   m_Layer: 3
   m_Name: Paparazzi
   m_TagString: Paparazzi
@@ -296,6 +297,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4444778804206206119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 243849041503337225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d81a6734479d17543b005e49d574af76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rate: 10
+  lifeTime: 0.2
 --- !u!1 &243849041681453579
 GameObject:
   m_ObjectHideFlags: 0
@@ -307,7 +322,7 @@ GameObject:
   - component: {fileID: 243849041681453576}
   - component: {fileID: 243849041681453577}
   - component: {fileID: 9141851251544715003}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Triangle1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -409,7 +424,7 @@ GameObject:
   - component: {fileID: 243849041946134468}
   - component: {fileID: 243849041946134469}
   - component: {fileID: 243849041946134471}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ActionCone1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -573,7 +588,7 @@ GameObject:
   - component: {fileID: 5217583465822441388}
   - component: {fileID: 4565517046932691452}
   - component: {fileID: 3038158443343032007}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ActionCone2
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -13,7 +13,7 @@ public class ActionButton : MonoBehaviour
     private float reloadTime = 2.5f;
     private bool isReloading = false;
 
-    private float activationTime = 1f;
+    private float activationTime = 3f;
 
     private void Start()
     {
@@ -43,7 +43,6 @@ public class ActionButton : MonoBehaviour
         {
             if (Input.GetKeyDown(pm.actionKey) && !isReloading)
             {
-                Debug.Log("check");
                 if (pm.resources >= 1 && gameObject.GetComponent<Collider2D>().enabled)
                 {
                     if (inRange && target.GetComponent<CelebItems>().CheckIfVisible())
@@ -64,20 +63,20 @@ public class ActionButton : MonoBehaviour
         }
         else if (transform.parent.CompareTag("Celebrity"))
         {
-            if (Input.GetKeyDown(pm.actionKey) && inRange)
+            if (Input.GetKey(pm.actionKey) && inRange && gmScript.goalManager.canCollectGoal)
             {
-                timeOfPress = Time.time;
-                pm.slider.value = 0;
-                pm.slider.gameObject.SetActive(true);
-            }
-            else if (Input.GetKey(pm.actionKey) && inRange)
-            {
+                if (!pm.slider.gameObject.activeSelf)
+                {
+                    timeOfPress = Time.time;
+                    pm.slider.value = 0;
+                    pm.slider.gameObject.SetActive(true);
+                }
+
                 pm.slider.value = (Time.time - timeOfPress) / activationTime;
                 if (pm.slider.value >= 1)
                 {
                     pm.UpdateScore();
-                    // Destroy(target);
-                    target.GetComponent<PowerUpSelfDestruct>().StartSelfDestruct();
+                    gmScript.goalManager.StartSelfDestruct();
                 }
             }
             else
@@ -106,7 +105,6 @@ public class ActionButton : MonoBehaviour
         if (transform.parent.CompareTag("Celebrity") && collision.gameObject.CompareTag("Goal"))
         {
             inRange = true;
-            target = collision.gameObject;
         }
     }
 
@@ -121,7 +119,6 @@ public class ActionButton : MonoBehaviour
         if (transform.parent.CompareTag("Celebrity") && collision.gameObject.CompareTag("Goal"))
         {
             inRange = false;
-            target = null;
         }
     }
 }

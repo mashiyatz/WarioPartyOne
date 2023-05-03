@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 1166367089026916757}
   - component: {fileID: 1166367089026916759}
   - component: {fileID: 8097082309493771835}
-  - component: {fileID: 1918818693663906762}
   - component: {fileID: -8491219710382905484}
+  - component: {fileID: 3266497806944164700}
   m_Layer: 0
   m_Name: Goal
   m_TagString: Goal
@@ -125,18 +125,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &1918818693663906762
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1166367089026916756}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2bda2799ddb3dc942b70dc7613644c04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!82 &-8491219710382905484
 AudioSource:
   m_ObjectHideFlags: 0
@@ -233,3 +221,15 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3266497806944164700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1166367089026916756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93c22ce2e396f2f4a8811a4cd41e5056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -15,7 +15,7 @@ public class CarMovement : MonoBehaviour
 
     void Start()
     {
-        speed = Random.Range(1.5f, 3.0f);
+        speed = Random.Range(2.0f, 4.0f);
     }
 
     void FixedUpdate()
@@ -30,4 +30,12 @@ public class CarMovement : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+/*    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            Destroy(gameObject);
+        }
+    }*/
 }
