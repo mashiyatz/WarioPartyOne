@@ -151,6 +151,9 @@ public class PlayerManager : MonoBehaviour
         {
             Vector3Int currentTilePos = pathmap.WorldToCell(transform.position);
             Vector3Int nextTilePos = currentTilePos + direction;
+            Debug.Log(pathmap.GetCellCenterWorld(currentTilePos));
+            Debug.Log(pathmap.GetCellCenterWorld(nextTilePos));
+
 
             if (pathmap.GetTile(nextTilePos) != null && !isMoving)
             {
@@ -194,20 +197,34 @@ public class PlayerManager : MonoBehaviour
 
     IEnumerator MoveToNextTile(Vector3Int direction)
     {
+        
         Vector2 moveTowards = transform.position;
         Vector2 nextPosition = moveTowards + new Vector2(direction.x, direction.y) * 0.4f;
+        
         isMoving = true;
         float lastDistance = Vector2.Distance(nextPosition, moveTowards);
 
-        while (Vector2.Distance(nextPosition, moveTowards) <= lastDistance)
+        // while (Vector2.Distance(nextPosition, moveTowards) <= lastDistance)
+        while (moveTowards != nextPosition)
         {
-            if (!canMove) break;
+            // METHOD 1
+/*            if (!canMove) break;
             // Debug.Log($"distance: {Vector2.Distance(nextPosition, moveTowards)}");
             lastDistance = Vector2.Distance(nextPosition, moveTowards);
             // Debug.Log($"last distance: {lastDistance}");
             moveTowards += movementSpeed * Time.deltaTime * new Vector2(direction.x, direction.y);
             rb.MovePosition(moveTowards);
+            yield return null;*/
+            //
+
+            //METHOD 2
+            if (!canMove) break;
+            lastDistance = Vector2.Distance(nextPosition, moveTowards);
+            // moveTowards += movementSpeed * Time.deltaTime * new Vector2(direction.x, direction.y);
+            moveTowards = Vector2.MoveTowards(moveTowards, nextPosition, movementSpeed * Time.deltaTime);
+            rb.MovePosition(moveTowards);
             yield return null;
+
         }
 
         isMoving = false;
