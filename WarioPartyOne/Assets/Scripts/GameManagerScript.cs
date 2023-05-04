@@ -43,7 +43,10 @@ public class GameManagerScript : MonoBehaviour
 
     public Tilemap tilemapPath;
     public Image flashPanel;
+
     public Image photo;
+    public SpriteRenderer photograph;
+
     public Sprite[] photoSprites;
     public GoalManager goalManager;
 
@@ -242,22 +245,38 @@ public class GameManagerScript : MonoBehaviour
     {
         float startTime = Time.time;
         float angle = Random.Range(-25, 25);
-        if (isGoodPhoto) photo.sprite = photoSprites[0];
-        else photo.sprite = photoSprites[1];
-        photo.transform.rotation = Quaternion.Euler(Vector3.forward * angle);
 
+/*        if (isGoodPhoto) photo.sprite = photoSprites[0];
+        else photo.sprite = photoSprites[1];
+        photo.transform.rotation = Quaternion.Euler(Vector3.forward * angle);*/
+        
+        if (isGoodPhoto) photograph.sprite = photoSprites[0];
+        else photograph.sprite = photoSprites[1];
+        photograph.transform.rotation = Quaternion.Euler(Vector3.forward * angle);
 
         while (Time.time - startTime <= 0.2f)
         {
-            flashPanel.color = Color.Lerp(flashPanel.color, new Color(1, 1, 1, 1), (Time.time - startTime) / 0.2f);
-            photo.color = Color.Lerp(photo.color, new Color(1, 1, 1, 1), (Time.time - startTime) / 0.2f);
+            flashPanel.color = Color.Lerp(new Color(1, 1, 1, 0), new Color(1, 1, 1, 1), (Time.time - startTime) / 0.2f);
+            // photo.color = Color.Lerp(photo.color, new Color(1, 1, 1, 1), (Time.time - startTime) / 0.2f);
+            photograph.color = Color.Lerp(new Color(1, 1, 1, 0), new Color(1, 1, 1, 1), (Time.time - startTime) / 0.2f);
             yield return null;
         }
         startTime = Time.time;
+        StartCoroutine(FadePhotograph());
         while (Time.time - startTime <= 0.2f)
         {
-            flashPanel.color = Color.Lerp(flashPanel.color, new Color(1, 1, 1, 0), (Time.time - startTime) / 0.2f);
-            photo.color = Color.Lerp(photo.color, new Color(1, 1, 1, 0), (Time.time - startTime) / 0.2f);
+            flashPanel.color = Color.Lerp(new Color(1, 1, 1, 1), new Color(1, 1, 1, 0), (Time.time - startTime) / 0.2f);
+            // photo.color = Color.Lerp(photo.color, new Color(1, 1, 1, 0), (Time.time - startTime) / 0.2f);
+            // photograph.color = Color.Lerp(photograph.color, new Color(1, 1, 1, 0), (Time.time - startTime) / 0.2f);
+            yield return null;
+        }
+    }
+
+    IEnumerator FadePhotograph()
+    {
+        float startTime = Time.time;
+        while (Time.time - startTime <= 2.5f) {
+            photograph.color = Color.Lerp(new Color(1, 1, 1, 1), new Color(1, 1, 1, 0), (Time.time - startTime) / 2.5f);
             yield return null;
         }
     }

@@ -34,7 +34,7 @@ public class GoalManager : MonoBehaviour
 
     IEnumerator DeactivateGoal(GameObject goalObject)
     {
-        yield return new WaitForSeconds(15.0f);
+        yield return new WaitForSeconds(150.0f);
         if (goalObject != null)
         {
             zones.DeactivateZone();
@@ -52,7 +52,6 @@ public class GoalManager : MonoBehaviour
     IEnumerator GoalSelfDestruct()
     {
         zones.DeactivateZone();
-        goalObject.GetComponent<Collider2D>().enabled = false;
         goalObject.GetComponent<SpriteRenderer>().enabled = false;
         goalObject.GetComponent<AudioSource>().Play();
         yield return new WaitForSeconds(2.0f);
