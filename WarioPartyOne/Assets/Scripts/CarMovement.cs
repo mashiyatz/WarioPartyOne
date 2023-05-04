@@ -15,12 +15,13 @@ public class CarMovement : MonoBehaviour
 
     void Start()
     {
-        speed = Random.Range(1.5f, 3.0f);
+        speed = Random.Range(3.0f, 4.5f);
     }
 
     void FixedUpdate()
     {
-        rb.MovePosition(transform.position + transform.up * speed * Time.fixedDeltaTime);
+        // rb.MovePosition(transform.position + transform.up * speed * Time.fixedDeltaTime);
+        rb.velocity = speed * transform.up;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -30,4 +31,12 @@ public class CarMovement : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+/*    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            Destroy(gameObject);
+        }
+    }*/
 }

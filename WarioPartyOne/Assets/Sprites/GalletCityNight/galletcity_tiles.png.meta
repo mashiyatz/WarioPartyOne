@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 20
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -3608,7 +3608,6 @@ TextureImporter:
       galletcity_tiles_54: -684405238
       galletcity_tiles_70: 769621567
       galletcity_tiles_11: 1479365781
-      galletcity_tiles_104: 2080841739
       galletcity_tiles_143: -363493559
       galletcity_tiles_60: -990528897
       galletcity_tiles_141: 75051805
@@ -3757,17 +3756,18 @@ TextureImporter:
       galletcity_tiles_89: 475170931
       galletcity_tiles_14: -1956214789
       galletcity_tiles_111: -1030227062
+      galletcity_tiles_118: -287563999
       galletcity_tiles_0: 1304608358
-      galletcity_tiles_67: -1972941150
+      galletcity_tiles_87: -1318871284
       galletcity_tiles_159: 275268617
       galletcity_tiles_145: 750499648
-      galletcity_tiles_34: -787370170
-      galletcity_tiles_156: 1488869148
-      galletcity_tiles_110: 328378537
-      galletcity_tiles_87: -1318871284
-      galletcity_tiles_56: -580679677
-      galletcity_tiles_118: -287563999
       galletcity_tiles_9: -1579450749
+      galletcity_tiles_67: -1972941150
+      galletcity_tiles_34: -787370170
+      galletcity_tiles_104: 2080841739
+      galletcity_tiles_56: -580679677
+      galletcity_tiles_110: 328378537
+      galletcity_tiles_156: 1488869148
       galletcity_tiles_80: -154823804
   spritePackingTag: 
   pSDRemoveMatte: 0

@@ -12,16 +12,17 @@ TagManager:
   - CameraUpgrade
   - Disguise
   - NoCarZone
+  - Car
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Player
+  - Paparazzi
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Border
+  - Car
+  - Celebrity
   - 
   - 
   - 

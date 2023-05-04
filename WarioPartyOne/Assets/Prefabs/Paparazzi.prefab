@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 218489853058641754}
   - component: {fileID: 6041682760152216873}
-  m_Layer: 0
+  - component: {fileID: 7069124997307634255}
+  m_Layer: 3
   m_Name: Triangle2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,6 +85,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7069124997307634255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218936181281509288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5b3e7a0d713e4f4ba364f8a3ea0ba80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  paparazziPM: {fileID: 243849041503337223}
+  actionCone: {fileID: 4565517046932691452}
+  restColor: {r: 1, g: 1, b: 1, a: 0.2509804}
+  inRangeColor: {r: 0, g: 0.5, b: 0.5, a: 0.2509804}
 --- !u!1 &243849041503337225
 GameObject:
   m_ObjectHideFlags: 0
@@ -99,6 +116,7 @@ GameObject:
   - component: {fileID: 243849041503337222}
   - component: {fileID: -2598363063300757324}
   - component: {fileID: 8493728394077467434}
+  - component: {fileID: 4444778804206206119}
   m_Layer: 3
   m_Name: Paparazzi
   m_TagString: Paparazzi
@@ -115,7 +133,7 @@ Transform:
   m_GameObject: {fileID: 243849041503337225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.5, y: -0.5, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.65, y: 0.65, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6864823632513833431}
@@ -162,7 +180,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1045089209
   m_SortingLayer: 2
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_Sprite: {fileID: -967130087, guid: f8fd79af20f8223418f17a6529e23b41, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -191,7 +209,7 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -214,7 +232,7 @@ MonoBehaviour:
   rightKey: 119
   actionKey: 304
   rotationSpeed: 360
-  movementSpeed: 1
+  movementSpeed: 2
   score: 0
   resources: 0
   lastDirection: {x: 0, y: -1}
@@ -279,6 +297,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4444778804206206119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 243849041503337225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d81a6734479d17543b005e49d574af76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rate: 10
+  lifeTime: 0.2
 --- !u!1 &243849041681453579
 GameObject:
   m_ObjectHideFlags: 0
@@ -289,7 +321,8 @@ GameObject:
   m_Component:
   - component: {fileID: 243849041681453576}
   - component: {fileID: 243849041681453577}
-  m_Layer: 0
+  - component: {fileID: 9141851251544715003}
+  m_Layer: 3
   m_Name: Triangle1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -363,6 +396,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &9141851251544715003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 243849041681453579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5b3e7a0d713e4f4ba364f8a3ea0ba80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  paparazziPM: {fileID: 243849041503337223}
+  actionCone: {fileID: 243849041946134469}
+  restColor: {r: 1, g: 1, b: 1, a: 0.2509804}
+  inRangeColor: {r: 0, g: 0.5, b: 0.5, a: 0.2509804}
 --- !u!1 &243849041946134473
 GameObject:
   m_ObjectHideFlags: 0
@@ -503,7 +552,7 @@ GameObject:
   - component: {fileID: 6864823632513833431}
   m_Layer: 3
   m_Name: View
-  m_TagString: Untagged
+  m_TagString: Paparazzi
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

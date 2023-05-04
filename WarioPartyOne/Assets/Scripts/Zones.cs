@@ -7,39 +7,63 @@ public struct Zone
 {
     public Vector3Int topLeft;
     public Vector3Int bottomRight;
-    public Vector3Int door;
 
-    public Zone(Vector3Int topLeft, Vector3Int bottomRight, Vector3Int door)
+/*    public Zone(Vector3Int topLeft, Vector3Int bottomRight, Vector3Int door)
     {
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
-        this.door = door;
+        this.door = door; 
+    }*/
+    public Zone(Vector3Int topLeft, Vector3Int bottomRight)
+    {
+        this.topLeft = topLeft;
+        this.bottomRight = bottomRight;
     }
 
-    public void Activate(Tilemap tilemap)
+    public void Activate(Tilemap buildingMap, Tilemap pathMap)
     {
-        ChangeColor(tilemap, Color.yellow);
-        tilemap.SetColliderType(door, Tile.ColliderType.None);
+        ChangeColor(buildingMap, pathMap, Color.yellow);
+        // tilemap.SetColliderType(door, Tile.ColliderType.None);
     }
 
-    public void Deactivate(Tilemap tilemap)
+    public void Deactivate(Tilemap buildingMap, Tilemap pathMap)
     {
-        ChangeColor(tilemap, Color.white);
+        ChangeColor(buildingMap, pathMap, Color.white);
         // tilemap.SetColliderType(door, Tile.ColliderType.Sprite);
     }
 
-    private void ChangeColor(Tilemap tilemap, Color color)
+    private void ChangeColor(Tilemap buildingMap, Tilemap pathMap, Color color)
     {
-        for (int x = topLeft.x; x <= bottomRight.x; x++)
+        for (int x = topLeft.x - 1; x <= bottomRight.x + 1; x++)
         {
-            for (int y = bottomRight.y; y <= topLeft.y; y++)
+            for (int y = bottomRight.y - 1; y <= topLeft.y + 1; y++)
             {
                 Vector3Int pos = new Vector3Int(x, y);
-                tilemap.SetTileFlags(pos, TileFlags.None);
-                tilemap.SetColor(pos, color);
+                buildingMap.SetTileFlags(pos, TileFlags.None); 
+                buildingMap.SetColor(pos, color);
+                pathMap.SetTileFlags(pos, TileFlags.None);
+                pathMap.SetColor(pos, color);
+                if (color == Color.white) pathMap.SetColliderType(pos, Tile.ColliderType.None);
+                else if (color == Color.yellow) pathMap.SetColliderType(pos, Tile.ColliderType.Sprite); 
             }
         }
     }
+/*    public bool CheckIfCelebInZone(Tilemap pathmap, Transform celeb)
+    {
+        // seems very inefficient!
+        Vector3Int celebTilePosition = pathmap.WorldToCell(celeb.position);
+        for (int x = topLeft.x - 1; x <= bottomRight.x + 1; x++)
+        {
+            for (int y = bottomRight.y - 1; y <= topLeft.y + 1; y++)
+            {
+                if (celebTilePosition == new Vector3Int(x, y))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }*/
 
 
 }
@@ -47,6 +71,7 @@ public struct Zone
 public class Zones : MonoBehaviour
 {
     public Tilemap buildingTilemap;
+    public Tilemap pathTilemap;
     public Zone activeZone;
     private int lastZoneIndex = 99;
     private Zone[] zones;
@@ -54,72 +79,95 @@ public class Zones : MonoBehaviour
 
     void Start()
     {
-        zones = new Zone[22];
+        zones = new Zone[36];
         GenerateZones();
         startTime = Time.time;
     }
 
     void GenerateZones()
     {
-        // row 1
-        zones[0] = new Zone(new Vector3Int(-9, 12), new Vector3Int(-7, 10), new Vector3Int(-8, 10));
-        zones[1] = new Zone(new Vector3Int(-5, 12), new Vector3Int(-1, 10), new Vector3Int(-4, 10));
-        zones[2] = new Zone(new Vector3Int(1, 12), new Vector3Int(4, 10), new Vector3Int(3, 10));
-        zones[3] = new Zone(new Vector3Int(6, 12), new Vector3Int(8, 10), new Vector3Int(7, 10));
+        // row 1, from top left
+        zones[0] = new Zone(new Vector3Int(-15, 10), new Vector3Int(-14, 8));
+        zones[1] = new Zone(new Vector3Int(-12, 10), new Vector3Int(-8, 8));
+        zones[2] = new Zone(new Vector3Int(-5, 10), new Vector3Int(-4, 8));
+        zones[3] = new Zone(new Vector3Int(3, 10), new Vector3Int(4, 9));
+        zones[4] = new Zone(new Vector3Int(7, 10), new Vector3Int(10, 9));
+        zones[5] = new Zone(new Vector3Int(12, 10), new Vector3Int(15, 9));
+
         // row 2 
-        zones[4] = new Zone(new Vector3Int(-9, 8), new Vector3Int(-8, 6), new Vector3Int(-8, 6));
-        zones[5] = new Zone(new Vector3Int(-6, 8), new Vector3Int(-4, 6), new Vector3Int(-5, 6));
-        zones[6] = new Zone(new Vector3Int(-2, 8), new Vector3Int(1, 6), new Vector3Int(-1, 6));
-        zones[7] = new Zone(new Vector3Int(3, 8), new Vector3Int(5, 6), new Vector3Int(4, 6));
-        zones[8] = new Zone(new Vector3Int(7, 8), new Vector3Int(8, 6), new Vector3Int(7, 6));
-        // center
-        zones[9] = new Zone(new Vector3Int(-9, 4), new Vector3Int(-6, 2), new Vector3Int(-7, 2));
-        zones[10] = new Zone(new Vector3Int(-9, 0), new Vector3Int(-6, -5), new Vector3Int(-8, -5));
-        zones[11] = new Zone(new Vector3Int(5, 4), new Vector3Int(8, -1), new Vector3Int(6, -1));
-        zones[12] = new Zone(new Vector3Int(5, -3), new Vector3Int(8, -5), new Vector3Int(7, -5));
+        zones[6] = new Zone(new Vector3Int(-15, 6), new Vector3Int(-12, 5));
+        zones[7] = new Zone(new Vector3Int(-10, 6), new Vector3Int(-8, 5));
+        zones[8] = new Zone(new Vector3Int(-5, 6), new Vector3Int(-4, 5));
+        zones[9] = new Zone(new Vector3Int(-2, 10), new Vector3Int(1, 5));
+        zones[10] = new Zone(new Vector3Int(3, 7), new Vector3Int(4, 5));
+        zones[11] = new Zone(new Vector3Int(7, 7), new Vector3Int(8, 5));
+        zones[12] = new Zone(new Vector3Int(10, 7), new Vector3Int(11, 5));
+        zones[13] = new Zone(new Vector3Int(13, 7), new Vector3Int(14, 5));
+
         // row 3
-        zones[13] = new Zone(new Vector3Int(-9, -7), new Vector3Int(-8, -9), new Vector3Int(-8, -9));
-        zones[14] = new Zone(new Vector3Int(-6, -7), new Vector3Int(-4, -9), new Vector3Int(-5, -9));
-        zones[15] = new Zone(new Vector3Int(-2, -7), new Vector3Int(1, -9), new Vector3Int(0, -9));
-        zones[16] = new Zone(new Vector3Int(3, -7), new Vector3Int(5, -9), new Vector3Int(4, -9));
-        zones[17] = new Zone(new Vector3Int(7, -7), new Vector3Int(8, -9), new Vector3Int(7, -9));
+        zones[14] = new Zone(new Vector3Int(-15, 3), new Vector3Int(-13, 1));
+        zones[15] = new Zone(new Vector3Int(-11, 3), new Vector3Int(-8, 1));
+        zones[16] = new Zone(new Vector3Int(7, 3), new Vector3Int(9, 1));
+        zones[17] = new Zone(new Vector3Int(11, 3), new Vector3Int(14, 1));
+
         // row 4
-        zones[18] = new Zone(new Vector3Int(-9, -11), new Vector3Int(-7, -13), new Vector3Int(-8, -13));
-        zones[19] = new Zone(new Vector3Int(-5, -11), new Vector3Int(-1, -13), new Vector3Int(-4, -13));
-        zones[20] = new Zone(new Vector3Int(0, -11), new Vector3Int(4, -13), new Vector3Int(2, -13));
-        zones[21] = new Zone(new Vector3Int(6, -11), new Vector3Int(8, -13), new Vector3Int(7, -13));
+        zones[18] = new Zone(new Vector3Int(-15, -1), new Vector3Int(-12, -3));
+        zones[19] = new Zone(new Vector3Int(-10, -1), new Vector3Int(-8, -3));
+        zones[20] = new Zone(new Vector3Int(7, -1), new Vector3Int(10, -3));
+        zones[21] = new Zone(new Vector3Int(12, -1), new Vector3Int(14, -3));
+
+        // row 5
+        zones[22] = new Zone(new Vector3Int(-15, -5), new Vector3Int(-14, -7));
+        zones[23] = new Zone(new Vector3Int(-12, -5), new Vector3Int(-11, -7));
+        zones[24] = new Zone(new Vector3Int(-9, -5), new Vector3Int(-8, -7));
+        zones[25] = new Zone(new Vector3Int(-5, -5), new Vector3Int(-4, -7));
+        zones[26] = new Zone(new Vector3Int(-2, -5), new Vector3Int(1, -10));
+        zones[27] = new Zone(new Vector3Int(3, -5), new Vector3Int(4, -6));
+        zones[28] = new Zone(new Vector3Int(7, -5), new Vector3Int(9, -6));
+        zones[29] = new Zone(new Vector3Int(11, -5), new Vector3Int(14, -6));
+
+        // row 6
+        zones[30] = new Zone(new Vector3Int(-15 , -9), new Vector3Int(-13, -10));
+        zones[31] = new Zone(new Vector3Int(-11 , -9), new Vector3Int(-8, -10));
+        zones[32] = new Zone(new Vector3Int(-5 , -9), new Vector3Int(-4, -10));
+        zones[33] = new Zone(new Vector3Int(3 , -8), new Vector3Int(4, -10));
+        zones[34] = new Zone(new Vector3Int(7 , -8), new Vector3Int(11, -10));
+        zones[35] = new Zone(new Vector3Int(13 , -8), new Vector3Int(14, -10));
     }
 
-    public Vector3Int ActivateZone()
+    public Vector3 ActivateZone()
     {
         int rand;
-        if (lastZoneIndex > 0 && lastZoneIndex <= 8)
+        if (lastZoneIndex > 0 && lastZoneIndex <= 13)
         {
-            rand = Random.Range(9, zones.Length);
-        } else if (lastZoneIndex > 13 && lastZoneIndex <= 21)
+            rand = Random.Range(14, zones.Length);
+        } else if (lastZoneIndex > 22 && lastZoneIndex <= 35)
         {
-            rand = Random.Range(0, 13);
+            rand = Random.Range(0, 22);
         } else
         {
             rand = Random.Range(0, zones.Length);
         }
         // activeZone = zones[Random.Range(0, zones.Length)];
         activeZone = zones[rand];
-        activeZone.Activate(buildingTilemap);
+        activeZone.Activate(buildingTilemap, pathTilemap);
         lastZoneIndex = rand;
 
-        return activeZone.door;
+        return CalculateBuildingCenterInWorldPosition(activeZone);
     }
 
-    IEnumerator DeactivateZone(Zone zone)
+    public Vector3 CalculateBuildingCenterInWorldPosition(Zone zone)
     {
-        yield return new WaitForSeconds(15.0f);
-        zone.Deactivate(buildingTilemap);
+        Vector3 bottomRightWorld = buildingTilemap.GetCellCenterWorld(zone.bottomRight);
+        Vector3 topLeftWorld = buildingTilemap.GetCellCenterWorld(zone.topLeft);
+        Vector3 offset = new Vector3((bottomRightWorld.x - topLeftWorld.x) / 1.66f, (topLeftWorld.y - bottomRightWorld.y) / 1.66f, 0);
+        Vector3 center = new Vector3(topLeftWorld.x, bottomRightWorld.y, 0) + offset;
+        return center;
     }
 
     public void DeactivateZone()
     {
-        activeZone.Deactivate(buildingTilemap);
+        activeZone.Deactivate(buildingTilemap, pathTilemap);
     }
 
 }
