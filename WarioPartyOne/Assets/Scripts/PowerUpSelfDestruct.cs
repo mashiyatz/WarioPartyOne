@@ -9,8 +9,8 @@ public class PowerUpSelfDestruct : MonoBehaviour
 
     private void Start()
     {
-        minSize = new Vector3(0.20f, 0.20f, 1);
-        maxSize = new Vector3(0.35f, 0.35f, 1);
+        minSize = new Vector3(0.35f, 0.35f, 1);
+        maxSize = new Vector3(0.5f, 0.5f, 1);
     }
 
     private void Update()

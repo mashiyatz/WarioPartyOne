@@ -30,9 +30,13 @@ public class PlayerManager : MonoBehaviour
     public string[] animStates;
 
     private Coroutine collisionCoroutine;
+    private Coroutine recoverCoroutine;
 
-    // set tile
-    private Tilemap pathmap;
+    // Tile Movement Version
+    private Tilemap pathmap; // have to set this before can move
+    private bool isMoving = false;
+
+    private bool canMove = true;
 
     void Start()
     {
@@ -53,10 +57,10 @@ public class PlayerManager : MonoBehaviour
 
     IEnumerator SpeedUp()
     {
-        movementSpeed = 2;
+        movementSpeed = 3;
         GetComponent<AfterImage>().Activate(true);
         yield return new WaitForSeconds(5f);
-        movementSpeed = 1;
+        movementSpeed = 2;
         GetComponent<AfterImage>().Activate(false);
     }
 
@@ -65,6 +69,11 @@ public class PlayerManager : MonoBehaviour
         if (gameObject.CompareTag("Paparazzi")) slider = GameObject.Find("CameraTimeoutSlider").GetComponent<Slider>();
         else if (gameObject.CompareTag("Celebrity")) slider = GameObject.Find("ActivationTimeoutSlider").GetComponent<Slider>();
         slider.gameObject.SetActive(false);
+    }
+
+    public void SetTilemap(Tilemap tilemap)
+    {
+        pathmap = tilemap;
     }
 
     void SetButtonConfig()
@@ -115,33 +124,112 @@ public class PlayerManager : MonoBehaviour
         resources = r;
     }
 
-    private void FixPositionToTile()
+    private void ResetPositionToTileCenter()
     {
-        rb.MovePosition(pathmap.CellToWorld(pathmap.WorldToCell(transform.position)));
+        if (pathmap.GetTile(pathmap.WorldToCell(transform.position)) != null)
+        {
+            rb.MovePosition(pathmap.GetCellCenterWorld(pathmap.WorldToCell(transform.position)));
+        }
     }
 
-    private void FixedUpdate()
+    private void TileBasedMove()
+    {
+        Vector3Int direction = Vector3Int.zero;
+
+        if (Input.GetKey(upKey)) direction = Vector3Int.up;
+        else if (Input.GetKey(downKey)) direction = Vector3Int.down;
+        else if (Input.GetKey(leftKey)) direction = Vector3Int.left;
+        else if (Input.GetKey(rightKey)) direction = Vector3Int.right;
+
+        if (direction == Vector3Int.zero)
+        {
+            if (!isMoving)
+            {
+                ResetPositionToTileCenter();
+            }
+        } else
+        {
+            Vector3Int currentTilePos = pathmap.WorldToCell(transform.position);
+            Vector3Int nextTilePos = currentTilePos + direction;
+
+            if (pathmap.GetTile(nextTilePos) != null && !isMoving)
+            {
+                // StartCoroutine(MoveToTile(currentTilePos, nextTilePos));
+                StartCoroutine(MoveToNextTile(direction));
+            }
+
+            lastDirection = new Vector2(direction.x, direction.y);
+        }        
+
+        float angle;
+        angle = Vector2.SignedAngle(Vector2.up, lastDirection);
+
+        if (gameObject.CompareTag("Paparazzi"))
+        {
+            Vector3 targetRotation = new Vector3(0, 0, angle);
+            Quaternion lookTo = Quaternion.Euler(targetRotation);
+
+
+            transform.GetChild(0).rotation = Quaternion.RotateTowards(transform.GetChild(0).rotation, lookTo, rotationSpeed * Time.deltaTime);
+        }
+
+        if (anim != null)
+        {
+            float convertedAngle = angle + 180;
+
+            if (convertedAngle >= 315 || convertedAngle < 45) anim.Play(animStates[1]);
+            else if (convertedAngle >= 45 && convertedAngle < 135)
+            {
+                GetComponent<SpriteRenderer>().flipX = true;
+                anim.Play(animStates[3]);
+            }
+            else if (convertedAngle >= 135 && convertedAngle < 225) anim.Play(animStates[5]);
+            else if (convertedAngle >= 225 && convertedAngle < 315)
+            {
+                GetComponent<SpriteRenderer>().flipX = false;
+                anim.Play(animStates[3]);
+            }
+        }
+    }
+
+    IEnumerator MoveToNextTile(Vector3Int direction)
+    {
+        Vector2 moveTowards = transform.position;
+        Vector2 nextPosition = moveTowards + new Vector2(direction.x, direction.y) * 0.4f;
+        isMoving = true;
+        float lastDistance = Vector2.Distance(nextPosition, moveTowards);
+
+        while (Vector2.Distance(nextPosition, moveTowards) <= lastDistance)
+        {
+            if (!canMove) break;
+            // Debug.Log($"distance: {Vector2.Distance(nextPosition, moveTowards)}");
+            lastDistance = Vector2.Distance(nextPosition, moveTowards);
+            // Debug.Log($"last distance: {lastDistance}");
+            moveTowards += movementSpeed * Time.deltaTime * new Vector2(direction.x, direction.y);
+            rb.MovePosition(moveTowards);
+            yield return null;
+        }
+
+        isMoving = false;
+    }
+
+    private void DirectionBasedMove()
     {
         float angle;
         Vector2 direction = Vector2.zero;
         Vector2 moveTowards = transform.position;
 
         // direction with normalization
-        /*        if (Input.GetKey(upKey)) direction += Vector2.up;
-                if (Input.GetKey(downKey)) direction += Vector2.down;
-                if (Input.GetKey(leftKey)) direction += Vector2.left;
-                if (Input.GetKey(rightKey)) direction += Vector2.right;
+        if (Input.GetKey(upKey)) direction += Vector2.up;
+        if (Input.GetKey(downKey)) direction += Vector2.down;
+        if (Input.GetKey(leftKey)) direction += Vector2.left;
+        if (Input.GetKey(rightKey)) direction += Vector2.right;
 
-                direction.Normalize();*/
+        direction.Normalize();
         //
 
-        if (Input.GetKey(upKey)) direction = Vector2.up;
-        else if (Input.GetKey(downKey)) direction = Vector2.down;
-        else if (Input.GetKey(leftKey)) direction = Vector2.left;
-        else if (Input.GetKey(rightKey)) direction = Vector2.right;
-
         if (direction != Vector2.zero) lastDirection = direction;
-        
+
         // angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         angle = Vector2.SignedAngle(Vector2.up, lastDirection);
 
@@ -182,23 +270,71 @@ public class PlayerManager : MonoBehaviour
         moveTowards += movementSpeed * Time.deltaTime * direction;
         rb.MovePosition(moveTowards);
 
-        slider.transform.position = cam.WorldToScreenPoint(rb.position + 0.25f * Vector2.up); 
+/*        slider.transform.position = cam.WorldToScreenPoint(rb.position + 0.25f * Vector2.up);*/
+    }
+
+    private void FixedUpdate()
+    {
+        if (pathmap == null) return;
+        if (canMove) TileBasedMove(); 
+        // DirectionBasedMove();   
+        slider.transform.position = cam.WorldToScreenPoint(rb.position + 0.25f * Vector2.up);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Car"))
         {
-            if (collisionCoroutine == null) StartCoroutine(CarCollisionCooldown(collision.collider));
+            if (collisionCoroutine != null) StopCoroutine(collisionCoroutine);
+            collisionCoroutine = StartCoroutine(CarCollisionCooldown(collision.collider));
+            
         }
     }
 
     IEnumerator CarCollisionCooldown(Collider2D collider)
     {
-        yield return new WaitForSeconds(1.0f);
+        /*canMove = false;
+        rb.velocity = Vector2.zero;
+        
+        // yield return new WaitForSeconds(1.0f);
         if (collider != null)
         {
             Physics2D.IgnoreCollision(gameObject.GetComponent<Collider2D>(), collider, true);
         }
+        ResetPositionToTileCenter();
+        // yield return new WaitForSeconds(0.05f);
+        canMove = true;*/
+
+        canMove = false;
+        rb.velocity = collider.GetComponent<Rigidbody2D>().velocity;
+        if (collider != null) Physics2D.IgnoreCollision(gameObject.GetComponent<Collider2D>(), collider, true);
+        yield return new WaitForSeconds(1.0f);
+        // rb.velocity = Vector2.zero;
+        // ResetPositionToTileCenter();
+        if (recoverCoroutine != null) StopCoroutine(Recover());
+        recoverCoroutine = StartCoroutine(Recover());
+        // canMove = true;
     }
+
+    IEnumerator Recover()
+    {
+        rb.velocity = Vector2.zero;
+        Vector2 moveTowards = transform.position;
+        Vector2 nextPosition = pathmap.GetCellCenterWorld(pathmap.WorldToCell(transform.position));
+        float lastDistance = Vector2.Distance(nextPosition, moveTowards);
+
+        while (Vector2.Distance(nextPosition, moveTowards) <= lastDistance)
+        {
+            lastDistance = Vector2.Distance(nextPosition, moveTowards);
+            moveTowards += movementSpeed * Time.deltaTime * (nextPosition - moveTowards).normalized;
+            rb.MovePosition(moveTowards);
+            yield return null;
+        }
+
+        canMove = true;
+    }
+
+    //add code to reset player position if knocked out of bounds??
+
+
 }

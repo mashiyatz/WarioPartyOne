@@ -15,12 +15,13 @@ public class CarMovement : MonoBehaviour
 
     void Start()
     {
-        speed = Random.Range(2.0f, 4.0f);
+        speed = Random.Range(3.0f, 4.5f);
     }
 
     void FixedUpdate()
     {
-        rb.MovePosition(transform.position + transform.up * speed * Time.fixedDeltaTime);
+        // rb.MovePosition(transform.position + transform.up * speed * Time.fixedDeltaTime);
+        rb.velocity = speed * transform.up;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

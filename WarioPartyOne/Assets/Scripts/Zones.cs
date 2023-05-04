@@ -158,9 +158,9 @@ public class Zones : MonoBehaviour
 
     public Vector3 CalculateBuildingCenterInWorldPosition(Zone zone)
     {
-        Vector3 bottomRightWorld = buildingTilemap.CellToWorld(zone.bottomRight);
-        Vector3 topLeftWorld = buildingTilemap.CellToWorld(zone.topLeft);
-        Vector3 offset = new Vector3((bottomRightWorld.x - topLeftWorld.x) / 1.5f, (topLeftWorld.y - bottomRightWorld.y) / 1.25f, 0);
+        Vector3 bottomRightWorld = buildingTilemap.GetCellCenterWorld(zone.bottomRight);
+        Vector3 topLeftWorld = buildingTilemap.GetCellCenterWorld(zone.topLeft);
+        Vector3 offset = new Vector3((bottomRightWorld.x - topLeftWorld.x) / 1.66f, (topLeftWorld.y - bottomRightWorld.y) / 1.66f, 0);
         Vector3 center = new Vector3(topLeftWorld.x, bottomRightWorld.y, 0) + offset;
         return center;
     }

@@ -133,7 +133,7 @@ Transform:
   m_GameObject: {fileID: 243849041503337225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.5, y: -0.5, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.65, y: 0.65, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6864823632513833431}
@@ -232,7 +232,7 @@ MonoBehaviour:
   rightKey: 119
   actionKey: 304
   rotationSpeed: 360
-  movementSpeed: 1
+  movementSpeed: 2
   score: 0
   resources: 0
   lastDirection: {x: 0, y: -1}
@@ -424,7 +424,7 @@ GameObject:
   - component: {fileID: 243849041946134468}
   - component: {fileID: 243849041946134469}
   - component: {fileID: 243849041946134471}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: ActionCone1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -588,7 +588,7 @@ GameObject:
   - component: {fileID: 5217583465822441388}
   - component: {fileID: 4565517046932691452}
   - component: {fileID: 3038158443343032007}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: ActionCone2
   m_TagString: Untagged
   m_Icon: {fileID: 0}

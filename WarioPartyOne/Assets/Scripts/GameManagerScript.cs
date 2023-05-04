@@ -75,13 +75,16 @@ public class GameManagerScript : MonoBehaviour
         if (celeb != null) Destroy(celeb.gameObject);
         if (paparazzi != null) Destroy(paparazzi.gameObject);
 
-        Vector3 papaPos = tilemapPath.CellToWorld(papaStartPos) + new Vector3(0.125f, 0.125f, 0);
-        Vector3 celebPos = tilemapPath.CellToWorld(celebStartPos) + new Vector3(0.125f, 0.125f, 0);
+        Vector3 papaPos = tilemapPath.GetCellCenterWorld(papaStartPos); // + new Vector3(0.125f, 0.125f, 0);
+        Vector3 celebPos = tilemapPath.GetCellCenterWorld(celebStartPos); // + new Vector3(0.125f, 0.125f, 0);
 
         paparazzi = Instantiate(paparazziPrefab, papaPos, Quaternion.Euler(new Vector3(0, 0, 0))).GetComponent<PlayerManager>();
         celeb = Instantiate(celebPrefab, celebPos, Quaternion.Euler(new Vector3(0, 0, 0))).GetComponent<PlayerManager>();
         paparazziAction = paparazzi.GetComponentInChildren<ActionButton>();
         celebAction = celeb.GetComponentInChildren<ActionButton>();
+
+        paparazzi.SetTilemap(tilemapPath);
+        celeb.SetTilemap(tilemapPath);
     }
 
     void Update()

@@ -5,7 +5,8 @@ using UnityEngine.Tilemaps;
 
 public class GeneratePowerUps : MonoBehaviour
 {
-    public Transform paparazziPowerUpTransform;
+    //public Transform paparazziPowerUpTransform;
+    public Transform batteryTransform;
     public GameObject batteryPrefab;
 
     public Transform speedUpTransform;
@@ -21,29 +22,54 @@ public class GeneratePowerUps : MonoBehaviour
     public Tilemap tilemapObstacle;
     private List<Vector3> pathTilePositions;
 
-    private float speedUpTimer;
-    private float cameraUpgradeTimer;
-    private float disguiseTimer;
+    private bool isGeneratingSpeed;
+    private bool isGeneratingCamera;
+    private bool isGeneratingDisguise;
+    private bool isGeneratingBattery;
+
+    // private Vector3Int[] occupiedSpots;
 
     void Start()
     {
-        speedUpTimer = Time.time;
-        cameraUpgradeTimer = Time.time;
-        disguiseTimer = Time.time;
-
         pathTilePositions = new List<Vector3>();
         GetTilePositions();
-        GenerateSpeedPowerUp();
-        GenerateCameraUpgrade();
-        GenerateDisguisePowerup();
-        StartCoroutine(GenerateRandomPowerUp());
+        InitializePowerUps();
+    }
+
+    void InitializePowerUps()
+    {
+        Instantiate(speedUpPrefab, tilemapPath.GetCellCenterWorld(new Vector3Int(4, 0)), Quaternion.Euler(new Vector3(0, 0, 35f)), speedUpTransform);
+        Instantiate(speedUpPrefab, tilemapPath.GetCellCenterWorld(new Vector3Int(-5, 0)), Quaternion.Euler(new Vector3(0, 0, 35f)), speedUpTransform);
+        Instantiate(
+            batteryPrefab,
+            pathTilePositions[Random.Range(0, pathTilePositions.Count)],
+            Quaternion.Euler(new Vector3(0, 0, 35f)),
+            batteryTransform
+        );
+        Instantiate(
+            cameraUpgradePrefab,
+            pathTilePositions[Random.Range(0, pathTilePositions.Count)],
+            Quaternion.Euler(new Vector3(0, 0, 35f)),
+            cameraUpgradeTransform
+            );
+        Instantiate(
+            disguisePrefab,
+            pathTilePositions[Random.Range(0, pathTilePositions.Count)],
+            Quaternion.Euler(new Vector3(0, 0, 35f)),
+            disguiseTransform
+            );
+
+        isGeneratingSpeed = false;
+        isGeneratingCamera = false;
+        isGeneratingDisguise = false;
+        isGeneratingBattery = false;
     }
 
     void GetTilePositions()
     {
         foreach (Vector3Int pos in tilemapPath.cellBounds.allPositionsWithin)
         {
-            Vector3 worldPlace = tilemapPath.CellToWorld(pos);
+            Vector3 worldPlace = tilemapPath.GetCellCenterWorld(pos);
             if (tilemapPath.HasTile(pos) && !tilemapObstacle.HasTile(pos))
             {
                 pathTilePositions.Add(worldPlace);
@@ -51,79 +77,76 @@ public class GeneratePowerUps : MonoBehaviour
         }
     }
 
-    IEnumerator GenerateRandomPowerUp()
+    IEnumerator GenerateBattery()
     {
-        // randomly instantiate from a list of powerups, weighing specific powerups differently 
-        while (true)
-        {
-            if (paparazziPowerUpTransform.childCount == 0)
-            {
-                Instantiate(
-                    batteryPrefab, 
-                    pathTilePositions[Random.Range(0, pathTilePositions.Count)] + new Vector3(.125f, .125f, 0), 
-                    Quaternion.Euler(new Vector3(0, 0, 35f)), 
-                    paparazziPowerUpTransform
-                    );
-            }
-            yield return new WaitForSecondsRealtime(15);
-        }
+        yield return new WaitForSeconds(10.0f);
+        Instantiate(
+            batteryPrefab,
+            pathTilePositions[Random.Range(0, pathTilePositions.Count)],
+            Quaternion.Euler(new Vector3(0, 0, 35f)),
+            batteryTransform
+        );
+        isGeneratingBattery = false;
+
     }
 
-    void GenerateSpeedPowerUp()
+    IEnumerator GenerateSpeedPowerUp()
     {
-        // consider the position of speed powerup
-        Instantiate(speedUpPrefab, tilemapPath.CellToWorld(new Vector3Int(-1, -4)) + new Vector3(.25f, .125f, 0), Quaternion.Euler(new Vector3(0, 0, 35f)), speedUpTransform);
-        
+        yield return new WaitForSeconds(20.0f);
+        Instantiate(speedUpPrefab, tilemapPath.GetCellCenterWorld(new Vector3Int(4, 0)), Quaternion.Euler(new Vector3(0, 0, 35f)), speedUpTransform);
+        Instantiate(speedUpPrefab, tilemapPath.GetCellCenterWorld(new Vector3Int(-5, 0)), Quaternion.Euler(new Vector3(0, 0, 35f)), speedUpTransform);
+        isGeneratingSpeed = false;
     }
 
-    void GenerateCameraUpgrade()
+    IEnumerator GenerateCameraUpgrade()
     {
+        yield return new WaitForSeconds(30.0f);
         Instantiate(
             cameraUpgradePrefab,
-            pathTilePositions[Random.Range(0, pathTilePositions.Count)] + new Vector3(.125f, .125f, 0),
+            pathTilePositions[Random.Range(0, pathTilePositions.Count)],
             Quaternion.Euler(new Vector3(0, 0, 35f)),
             cameraUpgradeTransform
             );
+        isGeneratingCamera = false;
     }
 
-    void GenerateDisguisePowerup()
+    IEnumerator GenerateDisguisePowerup()
     {
+        yield return new WaitForSeconds(30.0f);
         Instantiate(
             disguisePrefab,
-            pathTilePositions[Random.Range(0, pathTilePositions.Count)] + new Vector3(.125f, .125f, 0),
+            pathTilePositions[Random.Range(0, pathTilePositions.Count)],
             Quaternion.Euler(new Vector3(0, 0, 35f)),
             disguiseTransform
             );
+        isGeneratingDisguise = false;
     }
 
     void Update()
     {
-
-        if (Time.time - speedUpTimer > 20)
+        if (batteryTransform.childCount == 0)
         {
-            if (speedUpTransform.childCount == 0)
-            {
-                GenerateSpeedPowerUp();
-                speedUpTimer = Time.time;
-            }
+            if (!isGeneratingBattery) StartCoroutine(GenerateBattery());
+            isGeneratingBattery = true;
         }
 
-        if (Time.time - cameraUpgradeTimer > 30)
+
+        if (speedUpTransform.childCount == 0)
         {
-            if (cameraUpgradeTransform.childCount == 0)
-            {
-                GenerateCameraUpgrade();
-                cameraUpgradeTimer = Time.time;
-            }
+            if (!isGeneratingSpeed) StartCoroutine(GenerateSpeedPowerUp());
+            isGeneratingSpeed = true;
         }
 
-        if (Time.time - disguiseTimer > 30)
+        if (cameraUpgradeTransform.childCount == 0)
         {
-            if (disguiseTransform.childCount == 0)
-            {
-                GenerateDisguisePowerup();
-                disguiseTimer = Time.time;
-            }
+            if (!isGeneratingCamera) StartCoroutine(GenerateCameraUpgrade());
+            isGeneratingCamera = true;
+        }
+
+        if (speedUpTransform.childCount == 0)
+        {
+            if (!isGeneratingDisguise) StartCoroutine(GenerateDisguisePowerup());
+            isGeneratingDisguise = true;
         }
     }
 }
