@@ -50,6 +50,10 @@ public class GameManagerScript : MonoBehaviour
     public Sprite[] photoSprites;
     public GoalManager goalManager;
 
+    //
+    private bool paparazziIsReady = false;
+    private bool celebrityIsReady = false;
+
     [SerializeField] private Vector3Int papaStartPos; 
     [SerializeField] private Vector3Int celebStartPos; 
 
@@ -93,8 +97,22 @@ public class GameManagerScript : MonoBehaviour
     void Update()
     {
         if (currentState == GameState.START)
-        {
-            if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+        {   
+            // Debug.Log($"State: {}");
+            
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                GameObject.Find("StartPaparazzi").GetComponent<TextMeshProUGUI>().text = "Ready";
+                paparazziIsReady = true;
+            }
+
+            if(Input.GetKeyDown(KeyCode.RightShift))
+            {
+                GameObject.Find("StartCelebrity").GetComponent<TextMeshProUGUI>().text = "Ready";
+                celebrityIsReady = true;
+            }
+
+            if(paparazziIsReady && celebrityIsReady)
             {
                 startPanel.SetActive(false);
                 startText.SetActive(false);
