@@ -11,7 +11,7 @@ public class MenuManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+        if (Input.GetKeyDown(KeyCode.U) || Input.GetKeyDown(KeyCode.Q))
         {
             StartGame();
         } 
