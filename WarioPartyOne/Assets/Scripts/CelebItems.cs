@@ -38,7 +38,7 @@ public class CelebItems : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q) && isHoldingItem)
+        if (Input.GetKeyDown(KeyCode.E) && isHoldingItem)
         {
             StartDisguiseActivation();
             isHoldingItem = false;

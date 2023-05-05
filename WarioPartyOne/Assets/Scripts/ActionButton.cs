@@ -50,6 +50,7 @@ public class ActionButton : MonoBehaviour
                         gmScript.FlashCamera(true);
                         pm.UpdateScore();
                         pm.UpdateResource(-1);
+                        if (pm.resources == 0) GetComponent<AudioSource>().Play();
                         StartCoroutine(Reload());
                     }
                     else

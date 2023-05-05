@@ -8,13 +8,14 @@ using TMPro;
 
 public class GameManagerScript : MonoBehaviour
 {
-    public enum GameState { START, PLAY, WIN }
+    public enum GameState { START, READY, PLAY, WIN }
     public GameState currentState;
     public int pointsToWin;
 
     public GameObject startPanel;
     public GameObject startText;
-    public GameObject winText;
+    public GameObject winPanel;
+    public GameObject[] winText;
     public GameObject celebUI;
     public GameObject papaUI;
 
@@ -35,6 +36,8 @@ public class GameManagerScript : MonoBehaviour
     public Image celebFrame;
     public Image paparazziFrame;
 
+    public GameObject[] winImage;
+
     public Color[] paparazziPalette;
     public Color[] celebPalette;
 
@@ -51,11 +54,14 @@ public class GameManagerScript : MonoBehaviour
     public GoalManager goalManager;
 
     //
-    private bool paparazziIsReady = false;
-    private bool celebrityIsReady = false;
+    public bool paparazziIsReady = false;
+    public bool celebrityIsReady = false;
+    public TextMeshProUGUI countdownTextbox;
 
     [SerializeField] private Vector3Int papaStartPos; 
-    [SerializeField] private Vector3Int celebStartPos; 
+    [SerializeField] private Vector3Int celebStartPos;
+
+    private float countDownStart;
 
     void Start()
     {
@@ -68,7 +74,8 @@ public class GameManagerScript : MonoBehaviour
 
         startPanel.SetActive(true);
         startText.SetActive(true);
-        winText.SetActive(false);
+        winText[0].SetActive(false);
+        winText[1].SetActive(false);
         celebUI.SetActive(false);
         papaUI.SetActive(false);
         objectGenerator.SetActive(false);
@@ -96,17 +103,19 @@ public class GameManagerScript : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(currentState);
+
         if (currentState == GameState.START)
         {   
             // Debug.Log($"State: {}");
             
-            if (Input.GetKeyDown(KeyCode.LeftShift))
+            if (Input.GetKeyDown(KeyCode.U))
             {
                 GameObject.Find("StartPaparazzi").GetComponent<TextMeshProUGUI>().text = "Ready";
                 paparazziIsReady = true;
             }
 
-            if(Input.GetKeyDown(KeyCode.RightShift))
+            if(Input.GetKeyDown(KeyCode.Q))
             {
                 GameObject.Find("StartCelebrity").GetComponent<TextMeshProUGUI>().text = "Ready";
                 celebrityIsReady = true;
@@ -114,10 +123,21 @@ public class GameManagerScript : MonoBehaviour
 
             if(paparazziIsReady && celebrityIsReady)
             {
+                countDownStart = Time.time;
+                currentState = GameState.READY;
+            }
+        }
+        else if (currentState == GameState.READY)
+        {
+            // countdownTextbox.text = (3 - Mathf.Abs(countDownStart - Time.time)).ToString("F0");
+            if (Time.time - countDownStart >= 1.0f)
+            {
+                // countdownTextbox.text = "";
                 startPanel.SetActive(false);
                 startText.SetActive(false);
                 celebUI.SetActive(true);
                 papaUI.SetActive(true);
+
 
                 celeb.enabled = true;
                 paparazzi.enabled = true;
@@ -137,29 +157,27 @@ public class GameManagerScript : MonoBehaviour
             {
                 celeb.enabled = false;
                 paparazzi.enabled = false;
+                celebAction.enabled = false;
+                paparazziAction.enabled = false;
                 objectGenerator.SetActive(false);
-
-                startPanel.SetActive(true);
+                winPanel.SetActive(true);
 
                 if (celeb.score > paparazzi.score)
                 {
-                    winText.GetComponent<TextMeshProUGUI>().text = "Celeb wins!";
+                    winImage[0].SetActive(true);
+                    winText[0].SetActive(true);
                 } else
                 {
-                    winText.GetComponent<TextMeshProUGUI>().text = "Paparazzi wins!";
+                    winImage[1].SetActive(true);
+                    winText[1].SetActive(true);
                 }
-
-                winText.SetActive(true);
 
                 currentState = GameState.WIN;
             }
         }
         else if (currentState == GameState.WIN)
         {
-            if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
-            {
-                StartCoroutine(RestartGame());
-            }
+            StartCoroutine(RestartGame());
         }
 
     }
@@ -249,8 +267,8 @@ public class GameManagerScript : MonoBehaviour
 
     IEnumerator RestartGame()
     {
-        yield return new WaitForSeconds(1.0f);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        yield return new WaitForSeconds(4.0f);
+        SceneManager.LoadScene("IntroScene");
     }
 
     public void FlashCamera(bool isGoodPhoto)

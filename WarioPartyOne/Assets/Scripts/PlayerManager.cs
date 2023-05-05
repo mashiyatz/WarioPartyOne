@@ -85,28 +85,35 @@ public class PlayerManager : MonoBehaviour
                 downKey = KeyCode.K;
                 leftKey = KeyCode.J;
                 rightKey = KeyCode.L;
-                actionKey = KeyCode.RightShift;
+                actionKey = KeyCode.U;
                 break;
             case 2:
                 upKey = KeyCode.A;
                 downKey = KeyCode.D;
                 leftKey = KeyCode.S;
                 rightKey = KeyCode.W;
-                actionKey = KeyCode.LeftShift;
+                actionKey = KeyCode.Q;
                 break;
             case 3:
                 upKey = KeyCode.L;
                 downKey = KeyCode.J;
                 leftKey = KeyCode.I;
                 rightKey = KeyCode.K;
-                actionKey = KeyCode.RightShift;
+                actionKey = KeyCode.U;
+                break;
+            case 4:
+                upKey = KeyCode.K;
+                downKey = KeyCode.I;
+                leftKey = KeyCode.L;
+                rightKey = KeyCode.J;
+                actionKey = KeyCode.U;
                 break;
             default:
                 upKey = KeyCode.W;
                 downKey = KeyCode.S;
                 leftKey = KeyCode.A;
                 rightKey = KeyCode.D;
-                actionKey = KeyCode.LeftShift;
+                actionKey = KeyCode.Q;
                 break;
         }
     }

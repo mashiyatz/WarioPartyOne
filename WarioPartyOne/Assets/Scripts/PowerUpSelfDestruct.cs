@@ -6,6 +6,7 @@ public class PowerUpSelfDestruct : MonoBehaviour
 {
     private Vector3 minSize;
     private Vector3 maxSize;
+    public AudioClip clip;
 
     private void Start()
     {
@@ -27,7 +28,7 @@ public class PowerUpSelfDestruct : MonoBehaviour
     {
         GetComponent<Collider2D>().enabled = false;
         GetComponent<SpriteRenderer>().enabled = false;
-        GetComponent<AudioSource>().Play();
+        GetComponent<AudioSource>().PlayOneShot(clip);
         yield return new WaitForSeconds(2.0f);
         Destroy(gameObject);
     }
