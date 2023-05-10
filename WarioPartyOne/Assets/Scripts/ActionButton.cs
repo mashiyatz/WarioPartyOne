@@ -13,7 +13,7 @@ public class ActionButton : MonoBehaviour
     private float reloadTime = 2.5f;
     private bool isReloading = false;
 
-    private float activationTime = 3f;
+    private float activationTime = 4f; //3 feels too fast
 
     private void Start()
     {
@@ -50,7 +50,6 @@ public class ActionButton : MonoBehaviour
                         gmScript.FlashCamera(true);
                         pm.UpdateScore();
                         pm.UpdateResource(-1);
-                        if (pm.resources == 0) GetComponent<AudioSource>().Play();
                         StartCoroutine(Reload());
                     }
                     else
@@ -58,6 +57,11 @@ public class ActionButton : MonoBehaviour
                         gmScript.FlashCamera(false);
                         pm.UpdateResource(-1);
                         StartCoroutine(Reload());
+                    }
+
+                    if (pm.resources == 0)
+                    {
+                        GetComponent<AudioSource>().Play();
                     }
                 }
             }

@@ -103,7 +103,10 @@ public class GameManagerScript : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(currentState);
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            StartCoroutine(RestartGame());
+        }
 
         if (currentState == GameState.START)
         {   
@@ -111,15 +114,26 @@ public class GameManagerScript : MonoBehaviour
             
             if (Input.GetKeyDown(KeyCode.U))
             {
-                GameObject.Find("StartPaparazzi").GetComponent<TextMeshProUGUI>().text = "Ready";
+                // GameObject.Find("StartPaparazzi").GetComponent<TextMeshProUGUI>().text = "Ready";
+                GameObject.Find("StartPaparazzi").GetComponent<TextMeshProUGUI>().text = "";
                 paparazziIsReady = true;
+            } else if (Input.GetKeyDown(KeyCode.O)) {
+                GameObject.Find("StartPaparazzi").GetComponent<TextMeshProUGUI>().text = "Press to start";
+                paparazziIsReady = false;
             }
 
             if(Input.GetKeyDown(KeyCode.Q))
             {
-                GameObject.Find("StartCelebrity").GetComponent<TextMeshProUGUI>().text = "Ready";
+                // GameObject.Find("StartCelebrity").GetComponent<TextMeshProUGUI>().text = "Ready";
+                GameObject.Find("StartCelebrity").GetComponent<TextMeshProUGUI>().text = "";
                 celebrityIsReady = true;
+            } else if (Input.GetKeyDown(KeyCode.E))
+            {
+                GameObject.Find("StartCelebrity").GetComponent<TextMeshProUGUI>().text = "Press to start";
+                celebrityIsReady = false;
             }
+
+
 
             if(paparazziIsReady && celebrityIsReady)
             {
@@ -193,24 +207,24 @@ public class GameManagerScript : MonoBehaviour
 
     void UpdateSpeedUI()
     {
-        if (paparazzi.movementSpeed > 1)
+        if (paparazzi.movementSpeed > 2)
         {
             paparazziFrame.color = Color.Lerp(
                 paparazziPalette[0],
                 paparazziPalette[1],
                 Mathf.Abs(Mathf.Sin(Time.time * 10)));
-        } else if (paparazzi.movementSpeed == 1)
+        } else if (paparazzi.movementSpeed == 2)
         {
             paparazziFrame.color = paparazziPalette[0];
         }
 
-        if (celeb.movementSpeed > 1)
+        if (celeb.movementSpeed > 2)
         {
             celebFrame.color = Color.Lerp(
                 celebPalette[0],
                 celebPalette[1],
                 Mathf.Abs(Mathf.Sin(Time.time * 10)));
-        } else if (celeb.movementSpeed == 1)
+        } else if (celeb.movementSpeed == 2)
         {
             celebFrame.color = celebPalette[0];
         }
@@ -218,22 +232,30 @@ public class GameManagerScript : MonoBehaviour
 
     void UpdatePowerUpUI()
     {
-        if (paparazzi.GetComponent<StanItems>().CheckIfUsingTelephoto())
+        if (paparazzi.GetComponent<StanItems>().isHoldingItem || paparazzi.GetComponent<StanItems>().CheckIfUsingTelephoto())
         {
             lens.color = new Color(1, 1, 1, 1);
-            lens.transform.Rotate(new Vector3(0, 0, Time.deltaTime * 72f));
-
         } else
         {
             lens.color = new Color(1, 1, 1, 0.4f);
         }
 
-        if (celeb.GetComponent<CelebItems>().CheckIfVisible())
+        if (paparazzi.GetComponent<StanItems>().CheckIfUsingTelephoto())
         {
-            disguise.color = new Color(1, 1, 1, 0.4f);
-        } else
+            lens.transform.Rotate(new Vector3(0, 0, Time.deltaTime * 72f));
+        }
+
+        if (celeb.GetComponent<CelebItems>().isHoldingItem || !celeb.GetComponent<CelebItems>().CheckIfVisible())
         {
             disguise.color = new Color(1, 1, 1, 1);
+        }
+        else
+        {
+            disguise.color = new Color(1, 1, 1, 0.4f);
+        }
+
+        if (!celeb.GetComponent<CelebItems>().CheckIfVisible())
+        {
             disguise.transform.Rotate(new Vector3(0, 0, Time.deltaTime * 72f));
         }
     }

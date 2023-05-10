@@ -7,10 +7,18 @@ public class StanItems : MonoBehaviour
 {
     public bool isHoldingItem;
     private bool isUsingTelephoto;
-    public GameObject normalCameraRange;
+/*    public GameObject normalCameraRange;
     public GameObject newCameraRange;
     public GameObject normalCameraRangeColliderObject;
-    public GameObject newCameraRangeColliderObject;
+    public GameObject newCameraRangeColliderObject;*/
+
+    public SpriteRenderer normalCameraRange;
+    public SpriteRenderer newCameraRange;
+    public Collider2D normalCameraRangeColliderObject;
+    public Collider2D newCameraRangeColliderObject;
+
+    public ActionButton normalAction;
+    public ActionButton newAction;
 
     private RawImage batteryOutline;
 
@@ -23,6 +31,16 @@ public class StanItems : MonoBehaviour
     {
         isUsingTelephoto = false;
         isHoldingItem = false;
+
+        normalCameraRange.enabled = true;
+        normalCameraRangeColliderObject.enabled = true;
+
+        newCameraRange.enabled = false;
+        newCameraRangeColliderObject.enabled = false;
+
+        normalAction.enabled = true;
+        newAction.enabled = false;
+
     }
 
     public bool CheckIfUsingTelephoto()
@@ -34,10 +52,17 @@ public class StanItems : MonoBehaviour
     {
         isUsingTelephoto = true;
         GetComponent<PlayerManager>().UpdateResource(3);
-        normalCameraRange.SetActive(false);
+        /*normalCameraRange.SetActive(false);
         normalCameraRangeColliderObject.SetActive(false);
         newCameraRange.SetActive(true);
-        newCameraRangeColliderObject.SetActive(true);
+        newCameraRangeColliderObject.SetActive(true);*/
+        normalCameraRange.enabled = false;
+        normalCameraRangeColliderObject.enabled = false;
+        normalAction.enabled = false;
+        newCameraRange.enabled = true;
+        newCameraRangeColliderObject.enabled = true;
+        newAction.enabled = true; 
+
         batteryOutline.color = Color.blue;
     }
 
@@ -49,13 +74,29 @@ public class StanItems : MonoBehaviour
             isHoldingItem = false;
         }
 
+        if (GetComponent<PlayerManager>().resources == 0)
+        {
+            normalCameraRange.enabled = false;
+        } else if (GetComponent<PlayerManager>().resources > 0 && !isUsingTelephoto)
+        {
+            normalCameraRange.enabled = true;
+        }
+
         if (isUsingTelephoto && GetComponent<PlayerManager>().resources == 0)
         {
             isUsingTelephoto = false;
-            normalCameraRange.SetActive(true);
+            /*normalCameraRange.SetActive(true);
             normalCameraRangeColliderObject.SetActive(true);
             newCameraRange.SetActive(false);
-            newCameraRangeColliderObject.SetActive(false);
+            newCameraRangeColliderObject.SetActive(false);*/
+
+            normalCameraRange.enabled = true;
+            normalCameraRangeColliderObject.enabled = true;
+            normalAction.enabled = true;
+            newCameraRange.enabled = false;
+            newCameraRangeColliderObject.enabled = false;
+            newAction.enabled = false;
+
             batteryOutline.color = Color.white;
         }
     }

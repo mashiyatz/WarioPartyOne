@@ -15,12 +15,12 @@ public class EnableIfReady : MonoBehaviour
         if (gmScript.celebrityIsReady && !chibiCeleb.activeSelf)
         {
             chibiCeleb.SetActive(true);
-            celebDescription.SetActive(false);
         }
+        else if (!gmScript.celebrityIsReady) chibiCeleb.SetActive(false);
         if (gmScript.paparazziIsReady && !chibiStan.activeSelf)
         {
             chibiStan.SetActive(true);
-            stanDescription.SetActive(false);
         }
+        else if (!gmScript.paparazziIsReady) chibiStan.SetActive(false);
     }
 }

@@ -18,7 +18,7 @@ public class ToggleVisionCone : MonoBehaviour
 
     void Update()
     {
-        if (isActiveAndEnabled)
+        /*if (isActiveAndEnabled)
         {
             if (paparazziPM.resources > 0)
             {
@@ -28,14 +28,18 @@ public class ToggleVisionCone : MonoBehaviour
             {
                 spriteRenderer.enabled = false;
             }
-        }
+        }*/
 
-        if (actionCone.CheckIfInRange())
+        if (spriteRenderer.enabled)
         {
-            spriteRenderer.color = inRangeColor;
-        } else
-        {
-            spriteRenderer.color = restColor;
+            if (actionCone.CheckIfInRange())
+            {
+                spriteRenderer.color = inRangeColor;
+            }
+            else
+            {
+                spriteRenderer.color = restColor;
+            }
         }
     }
 }

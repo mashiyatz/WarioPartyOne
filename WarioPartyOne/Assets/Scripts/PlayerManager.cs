@@ -158,8 +158,8 @@ public class PlayerManager : MonoBehaviour
         {
             Vector3Int currentTilePos = pathmap.WorldToCell(transform.position);
             Vector3Int nextTilePos = currentTilePos + direction;
-            Debug.Log(pathmap.GetCellCenterWorld(currentTilePos));
-            Debug.Log(pathmap.GetCellCenterWorld(nextTilePos));
+            // Debug.Log(pathmap.GetCellCenterWorld(currentTilePos));
+            // Debug.Log(pathmap.GetCellCenterWorld(nextTilePos));
 
 
             if (pathmap.GetTile(nextTilePos) != null && !isMoving)
@@ -300,9 +300,15 @@ public class PlayerManager : MonoBehaviour
     private void FixedUpdate()
     {
         if (pathmap == null) return;
-        if (canMove) TileBasedMove(); 
+        if (canMove) TileBasedMove();
         // DirectionBasedMove();   
-        slider.transform.position = cam.WorldToScreenPoint(rb.position + 0.25f * Vector2.up);
+        if (gameObject.CompareTag("Celebrity"))
+        {
+            slider.transform.position = cam.WorldToScreenPoint(rb.position + 0.25f * Vector2.up);
+        } else
+        {
+            slider.transform.position = cam.WorldToScreenPoint(rb.position - 0.25f * Vector2.up);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
