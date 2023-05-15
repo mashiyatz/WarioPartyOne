@@ -199,10 +199,14 @@ public class GameManagerScript : MonoBehaviour
                 {
                     winImage[0].SetActive(true);
                     winText[0].SetActive(true);
+                    int idolWins = PlayerPrefs.GetInt("idolWins", 0);
+                    PlayerPrefs.SetInt("idolWins", idolWins += 1);
                 } else
                 {
                     winImage[1].SetActive(true);
                     winText[1].SetActive(true);
+                    int stanWins = PlayerPrefs.GetInt("stanWins", 0);
+                    PlayerPrefs.SetInt("stanWins", stanWins += 1);
                 }
 
                 winDisplayTime = Time.time;

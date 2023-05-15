@@ -15,6 +15,16 @@ public class ValueSettings : MonoBehaviour
 
     public static float lensGenerateWaitTime = 30f;
     public static float disguiseGenerateWaitTime = 20f;
-    public static float disguiseBuffTime = 6.0f;
+    public static float disguiseBuffTime = 6.0f; 
 
+    /*
+     * Notes 5/14
+     * - increase disguise time from 5 to 6
+     * - decrease disguise spawn time from 30 to 20
+     * - increase battery spawn time from 10 to 15
+     * - increase zone duration from 16 to 18
+     * - decrease zone activation from 3.5 to 3.2
+     * - increase telephoto reload time from 2.5 to 3.5
+     * 
+     */
 }

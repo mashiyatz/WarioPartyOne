@@ -86,6 +86,7 @@ public class AfterImage : MonoBehaviour
     {
         // Can modify to only copy what you need!
         copy.sprite = original.sprite;
+        copy.color = original.color;
         copy.flipX = original.flipX;
         copy.flipY = original.flipY;
         copy.sortingLayerID = original.sortingLayerID;
