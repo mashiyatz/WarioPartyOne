@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class StanItems : MonoBehaviour
 {
     public bool isHoldingItem;
-    private bool isUsingTelephoto;
+    public bool isUsingTelephoto;
 /*    public GameObject normalCameraRange;
     public GameObject newCameraRange;
     public GameObject normalCameraRangeColliderObject;
@@ -21,6 +21,7 @@ public class StanItems : MonoBehaviour
     public ActionButton newAction;
 
     private RawImage batteryOutline;
+    public GameObject lowBatteryIndicator;
 
     private void Awake()
     {
@@ -64,10 +65,13 @@ public class StanItems : MonoBehaviour
         newAction.enabled = true; 
 
         batteryOutline.color = Color.blue;
+        lowBatteryIndicator.SetActive(false);
     }
 
     void Update()
     {
+        if (!GetComponent<PlayerManager>().enabled) return;
+
         if (Input.GetKeyDown(KeyCode.O) && isHoldingItem)
         {
             ActivateNewCamera();
@@ -76,9 +80,11 @@ public class StanItems : MonoBehaviour
 
         if (GetComponent<PlayerManager>().resources == 0)
         {
+            lowBatteryIndicator.SetActive(true);
             normalCameraRange.enabled = false;
         } else if (GetComponent<PlayerManager>().resources > 0 && !isUsingTelephoto)
         {
+            lowBatteryIndicator.SetActive(false);
             normalCameraRange.enabled = true;
         }
 

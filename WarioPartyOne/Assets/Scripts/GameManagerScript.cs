@@ -8,7 +8,7 @@ using TMPro;
 
 public class GameManagerScript : MonoBehaviour
 {
-    public enum GameState { START, READY, PLAY, WIN }
+    public enum GameState { START, READY, PLAY, WIN, END }
     public GameState currentState;
     public int pointsToWin;
 
@@ -26,6 +26,9 @@ public class GameManagerScript : MonoBehaviour
     private PlayerManager paparazzi;
     private ActionButton celebAction;
     private ActionButton paparazziAction;
+
+    private float winDisplayTime;
+    private float resetCount = 0;
 
     // graphic ui
     public Transform stars;
@@ -45,6 +48,7 @@ public class GameManagerScript : MonoBehaviour
     public GameObject carGenerator;
 
     public Tilemap tilemapPath;
+    public Tilemap obstaclePath;
     public Image flashPanel;
 
     public Image photo;
@@ -89,16 +93,18 @@ public class GameManagerScript : MonoBehaviour
         if (celeb != null) Destroy(celeb.gameObject);
         if (paparazzi != null) Destroy(paparazzi.gameObject);
 
-        Vector3 papaPos = tilemapPath.GetCellCenterWorld(papaStartPos); // + new Vector3(0.125f, 0.125f, 0);
-        Vector3 celebPos = tilemapPath.GetCellCenterWorld(celebStartPos); // + new Vector3(0.125f, 0.125f, 0);
+        Vector3 papaPos = tilemapPath.GetCellCenterWorld(papaStartPos); 
+        Vector3 celebPos = tilemapPath.GetCellCenterWorld(celebStartPos); 
 
         paparazzi = Instantiate(paparazziPrefab, papaPos, Quaternion.Euler(new Vector3(0, 0, 0))).GetComponent<PlayerManager>();
         celeb = Instantiate(celebPrefab, celebPos, Quaternion.Euler(new Vector3(0, 0, 0))).GetComponent<PlayerManager>();
         paparazziAction = paparazzi.GetComponentInChildren<ActionButton>();
         celebAction = celeb.GetComponentInChildren<ActionButton>();
 
-        paparazzi.SetTilemap(tilemapPath);
-        celeb.SetTilemap(tilemapPath);
+        paparazzi.SetPathTilemap(tilemapPath);
+        celeb.SetPathTilemap(tilemapPath);
+        paparazzi.SetObstacleTilemap(obstaclePath);
+        celeb.SetObstacleTilemap(obstaclePath);
     }
 
     void Update()
@@ -110,26 +116,26 @@ public class GameManagerScript : MonoBehaviour
 
         if (currentState == GameState.START)
         {   
-            // Debug.Log($"State: {}");
-            
             if (Input.GetKeyDown(KeyCode.U))
             {
                 // GameObject.Find("StartPaparazzi").GetComponent<TextMeshProUGUI>().text = "Ready";
-                GameObject.Find("StartPaparazzi").GetComponent<TextMeshProUGUI>().text = "";
+                GameObject.Find("StartPaparazzi").SetActive(false);
                 paparazziIsReady = true;
             } else if (Input.GetKeyDown(KeyCode.O)) {
-                GameObject.Find("StartPaparazzi").GetComponent<TextMeshProUGUI>().text = "Press to start";
+                // GameObject.Find("StartPaparazzi").GetComponent<TextMeshProUGUI>().text = "Press to start";
+                GameObject.Find("StartPaparazzi").SetActive(true);
                 paparazziIsReady = false;
             }
 
-            if(Input.GetKeyDown(KeyCode.Q))
+            if(Input.GetKeyDown(KeyCode.E))
             {
                 // GameObject.Find("StartCelebrity").GetComponent<TextMeshProUGUI>().text = "Ready";
-                GameObject.Find("StartCelebrity").GetComponent<TextMeshProUGUI>().text = "";
+                GameObject.Find("StartCelebrity").SetActive(false);
                 celebrityIsReady = true;
-            } else if (Input.GetKeyDown(KeyCode.E))
+            } else if (Input.GetKeyDown(KeyCode.Q))
             {
-                GameObject.Find("StartCelebrity").GetComponent<TextMeshProUGUI>().text = "Press to start";
+                // GameObject.Find("StartCelebrity").GetComponent<TextMeshProUGUI>().text = "Press to start";
+                GameObject.Find("StartCelebrity").SetActive(true);
                 celebrityIsReady = false;
             }
 
@@ -167,6 +173,19 @@ public class GameManagerScript : MonoBehaviour
         {
             UpdateUI();
 
+            if (Input.GetKey(KeyCode.U) && Input.GetKey(KeyCode.O) && Input.GetKey(KeyCode.Q) && Input.GetKey(KeyCode.E))
+            {
+                resetCount += Time.deltaTime;
+                if (resetCount > 3)
+                {
+                    currentState = GameState.END;
+                    StartCoroutine(RestartGame());
+                }
+            } else
+            {
+                resetCount = 0;
+            }
+
             if (celeb.score == pointsToWin || paparazzi.score == pointsToWin)
             {
                 celeb.enabled = false;
@@ -186,12 +205,21 @@ public class GameManagerScript : MonoBehaviour
                     winText[1].SetActive(true);
                 }
 
+                winDisplayTime = Time.time;
                 currentState = GameState.WIN;
             }
+
         }
         else if (currentState == GameState.WIN)
         {
-            StartCoroutine(RestartGame());
+            if (Time.time - winDisplayTime > 3)
+            {
+                currentState = GameState.END;
+                StartCoroutine(RestartGame());
+            }
+        } else if (currentState == GameState.END)
+        {
+            ;
         }
 
     }
@@ -289,7 +317,7 @@ public class GameManagerScript : MonoBehaviour
 
     IEnumerator RestartGame()
     {
-        yield return new WaitForSeconds(4.0f);
+        yield return new WaitForSeconds(3.0f);
         SceneManager.LoadScene("IntroScene");
     }
 

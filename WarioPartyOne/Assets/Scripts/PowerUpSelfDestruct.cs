@@ -43,7 +43,7 @@ public class PowerUpSelfDestruct : MonoBehaviour
                 {
                     if (collision.GetComponent<PlayerManager>().resources < 3)
                     {
-                        collision.GetComponent<PlayerManager>().UpdateResource(2);
+                        collision.GetComponent<PlayerManager>().UpdateResource(3);
                     }
                     StartCoroutine(PlayAudioThenDestroy());
                 }

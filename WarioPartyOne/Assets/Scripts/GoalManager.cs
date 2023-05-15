@@ -34,7 +34,7 @@ public class GoalManager : MonoBehaviour
 
     IEnumerator DeactivateGoal(GameObject goalObject)
     {
-        yield return new WaitForSeconds(16.0f);
+        yield return new WaitForSeconds(ValueSettings.zoneDuration);
         if (goalObject != null)
         {
             zones.DeactivateZone();

@@ -30,7 +30,7 @@ public class CelebItems : MonoBehaviour
     {
         isVisible = false;
         GetComponent<SpriteRenderer>().color = Color.black;
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(ValueSettings.disguiseBuffTime);
         isVisible = true;
         GetComponent<SpriteRenderer>().color = startColor;
         
@@ -38,7 +38,7 @@ public class CelebItems : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && isHoldingItem)
+        if (Input.GetKeyDown(KeyCode.Q) && isHoldingItem)
         {
             StartDisguiseActivation();
             isHoldingItem = false;

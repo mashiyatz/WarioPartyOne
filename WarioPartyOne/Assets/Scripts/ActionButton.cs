@@ -10,19 +10,27 @@ public class ActionButton : MonoBehaviour
     private GameManagerScript gmScript;
     private float timeOfPress;
 
-    private float reloadTime = 2.5f;
+    // private float reloadTime;
     private bool isReloading = false;
 
-    private float activationTime = 4f; //3 feels too fast
+    private float activationTime; 
 
     private void Start()
     {
+        // reloadTime = ValueSettings.cameraReloadTime;
+        activationTime = ValueSettings.zoneActivationTime;
+
         gmScript = FindObjectOfType<GameManagerScript>();
     }
 
     IEnumerator Reload()
     {
+        float reloadTime = ValueSettings.cameraReloadTime;
+
         pm.slider.gameObject.SetActive(true);
+        if (pm.gameObject.GetComponent<StanItems>().isUsingTelephoto) {
+            reloadTime = ValueSettings.telephotoReloadTime;
+        } 
         isReloading = true;
 
         float timer = 0;

@@ -37,8 +37,16 @@ public class GeneratePowerUps : MonoBehaviour
     {
         pathTilePositions = new List<Vector3>();
         occupiedIndexList = new List<int>();
-        powerUpIndexArray = new int[3]; // battery, lens, disguise
-        initialPowerUpPositions = new Vector3Int[5];
+        powerUpIndexArray = new int[2]; // lens, disguise
+        
+        initialPowerUpPositions = new Vector3Int[6];
+        initialPowerUpPositions[0] = new Vector3Int(3, 0);
+        initialPowerUpPositions[1] = new Vector3Int(-4, 0);
+        initialPowerUpPositions[2] = new Vector3Int(-12, -4);
+        initialPowerUpPositions[3] = new Vector3Int(11, 4);
+        initialPowerUpPositions[4] = new Vector3Int(-11, 7);
+        initialPowerUpPositions[5] = new Vector3Int(10, -7);
+
         GetTilePositions();
         InitializePowerUps();
 
@@ -60,30 +68,22 @@ public class GeneratePowerUps : MonoBehaviour
 
     void InitializePowerUps()
     {
-        initialPowerUpPositions[0] = new Vector3Int(3, 0);
-        initialPowerUpPositions[1] = new Vector3Int(-4, 0);
-        initialPowerUpPositions[2] = new Vector3Int(11, 4);
-        initialPowerUpPositions[3] = new Vector3Int(-12, 4);
-        initialPowerUpPositions[4] = new Vector3Int(10, -7);
-
         Instantiate(speedUpPrefab, tilemapPath.GetCellCenterWorld(initialPowerUpPositions[0]), Quaternion.Euler(new Vector3(0, 0, 35f)), speedUpTransform);
         Instantiate(speedUpPrefab, tilemapPath.GetCellCenterWorld(initialPowerUpPositions[1]), Quaternion.Euler(new Vector3(0, 0, 35f)), speedUpTransform);
 
-        Instantiate(
-            batteryPrefab,
-            tilemapPath.GetCellCenterWorld(initialPowerUpPositions[2]),
-            Quaternion.Euler(new Vector3(0, 0, 35f)),
-            batteryTransform
-        );
+        Instantiate(batteryPrefab, tilemapPath.GetCellCenterWorld(initialPowerUpPositions[2]), Quaternion.Euler(new Vector3(0, 0, 35f)), batteryTransform);
+        Instantiate(batteryPrefab, tilemapPath.GetCellCenterWorld(initialPowerUpPositions[3]), Quaternion.Euler(new Vector3(0, 0, 35f)), batteryTransform);
+
+
         Instantiate(
             cameraUpgradePrefab,
-            tilemapPath.GetCellCenterWorld(initialPowerUpPositions[3]),
+            tilemapPath.GetCellCenterWorld(initialPowerUpPositions[4]),
             Quaternion.Euler(new Vector3(0, 0, 35f)),
             cameraUpgradeTransform
             );
         Instantiate(
             disguisePrefab,
-            tilemapPath.GetCellCenterWorld(initialPowerUpPositions[4]),
+            tilemapPath.GetCellCenterWorld(initialPowerUpPositions[5]),
             Quaternion.Euler(new Vector3(0, 0, 35f)),
             disguiseTransform
             );
@@ -103,23 +103,16 @@ public class GeneratePowerUps : MonoBehaviour
 
     IEnumerator GenerateBattery()
     {
-        occupiedIndexList.Remove(powerUpIndexArray[0]);
-        yield return new WaitForSeconds(10.0f);
-        powerUpIndexArray[0] = GetUnoccupiedIndex();
-        Instantiate(
-            batteryPrefab,
-            // pathTilePositions[Random.Range(0, pathTilePositions.Count)],
-            pathTilePositions[powerUpIndexArray[0]],
-            Quaternion.Euler(new Vector3(0, 0, 35f)),
-            batteryTransform
-        );
+        yield return new WaitForSeconds(ValueSettings.batteryGenerateWaitTime);
+        Instantiate(batteryPrefab, tilemapPath.GetCellCenterWorld(initialPowerUpPositions[2]), Quaternion.Euler(new Vector3(0, 0, 35f)), batteryTransform);
+        Instantiate(batteryPrefab, tilemapPath.GetCellCenterWorld(initialPowerUpPositions[3]), Quaternion.Euler(new Vector3(0, 0, 35f)), batteryTransform);
         isGeneratingBattery = false;
 
     }
 
     IEnumerator GenerateSpeedPowerUp()
     {
-        yield return new WaitForSeconds(20.0f);
+        yield return new WaitForSeconds(ValueSettings.speedGenerateWaitTime);
         Instantiate(speedUpPrefab, tilemapPath.GetCellCenterWorld(initialPowerUpPositions[0]), Quaternion.Euler(new Vector3(0, 0, 35f)), speedUpTransform);
         Instantiate(speedUpPrefab, tilemapPath.GetCellCenterWorld(initialPowerUpPositions[1]), Quaternion.Euler(new Vector3(0, 0, 35f)), speedUpTransform);
         isGeneratingSpeed = false;
@@ -127,13 +120,13 @@ public class GeneratePowerUps : MonoBehaviour
 
     IEnumerator GenerateCameraUpgrade()
     {
-        occupiedIndexList.Remove(powerUpIndexArray[1]);
-        yield return new WaitForSeconds(30.0f);
-        powerUpIndexArray[1] = GetUnoccupiedIndex();
+        occupiedIndexList.Remove(powerUpIndexArray[0]);
+        yield return new WaitForSeconds(ValueSettings.lensGenerateWaitTime);
+        powerUpIndexArray[0] = GetUnoccupiedIndex();
         Instantiate(
             cameraUpgradePrefab,
             // pathTilePositions[Random.Range(0, pathTilePositions.Count)],
-            pathTilePositions[powerUpIndexArray[1]],
+            pathTilePositions[powerUpIndexArray[0]],
             Quaternion.Euler(new Vector3(0, 0, 35f)),
             cameraUpgradeTransform
             );
@@ -142,13 +135,13 @@ public class GeneratePowerUps : MonoBehaviour
 
     IEnumerator GenerateDisguisePowerup()
     {
-        occupiedIndexList.Remove(powerUpIndexArray[2]);
-        yield return new WaitForSeconds(30.0f);
-        powerUpIndexArray[2] = GetUnoccupiedIndex();
+        occupiedIndexList.Remove(powerUpIndexArray[1]);
+        yield return new WaitForSeconds(ValueSettings.disguiseGenerateWaitTime);
+        powerUpIndexArray[1] = GetUnoccupiedIndex();
         Instantiate(
             disguisePrefab,
             // pathTilePositions[Random.Range(0, pathTilePositions.Count)],
-            pathTilePositions[powerUpIndexArray[2]],
+            pathTilePositions[powerUpIndexArray[1]],
             Quaternion.Euler(new Vector3(0, 0, 35f)),
             disguiseTransform
             );
