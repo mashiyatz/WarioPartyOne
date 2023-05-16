@@ -15,7 +15,7 @@ public class PlayerManager : MonoBehaviour
     public KeyCode actionKey;
 
     public float rotationSpeed;
-    public float movementSpeed;
+    private float movementSpeed;
 
     public int score;
     public float resources;
@@ -48,6 +48,7 @@ public class PlayerManager : MonoBehaviour
         cam = Camera.main;
         score = 0;
         resources = 3;
+        movementSpeed = ValueSettings.normalMovementSpeed;
         SetButtonConfig();
         SetSlider();
         target.SetActive(true);
@@ -62,10 +63,10 @@ public class PlayerManager : MonoBehaviour
 
     IEnumerator SpeedUp()
     {
-        movementSpeed = 3;
+        movementSpeed = ValueSettings.fastMovementSpeed;
         GetComponent<AfterImage>().Activate(true);
         yield return new WaitForSeconds(ValueSettings.speedBuffTime);
-        movementSpeed = 2;
+        movementSpeed = ValueSettings.normalMovementSpeed;
         GetComponent<AfterImage>().Activate(false);
     }
 

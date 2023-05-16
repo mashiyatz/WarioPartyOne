@@ -9,7 +9,10 @@ public class ValueSettings : MonoBehaviour
     public static float zoneActivationTime = 3.2f;
     public static float zoneDuration = 18.0f;
 
-    public static float batteryGenerateWaitTime = 15f;
+    public static float normalMovementSpeed = 2f;
+    public static float fastMovementSpeed = 3f;
+
+    public static float batteryGenerateWaitTime = 12f;
     public static float speedGenerateWaitTime = 20f;
     public static float speedBuffTime = 5.0f;
 
@@ -24,7 +27,11 @@ public class ValueSettings : MonoBehaviour
      * - increase battery spawn time from 10 to 15
      * - increase zone duration from 16 to 18
      * - decrease zone activation from 3.5 to 3.2
-     * - increase telephoto reload time from 2.5 to 3.5
+     * - increase telephoto reload time from 2.5 to 3.2
      * 
+     * Notes 5/15
+     * - increase telephoto reload time from 3.2 to 3.5
+     * - narrowed the viewfinder
+     * - battery spawn time from 15 to 12
      */
 }
