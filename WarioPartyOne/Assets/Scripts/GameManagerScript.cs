@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.InputSystem.Utilities;
+using UnityEngine.InputSystem.Users;
 
 public class GameManagerScript : MonoBehaviour
 {
@@ -28,7 +31,6 @@ public class GameManagerScript : MonoBehaviour
     private ActionButton paparazziAction;
 
     private float winDisplayTime;
-    private float resetCount = 0;
 
     // graphic ui
     public Transform stars;
@@ -65,6 +67,9 @@ public class GameManagerScript : MonoBehaviour
     [SerializeField] private Vector3Int papaStartPos; 
     [SerializeField] private Vector3Int celebStartPos;
 
+    [SerializeField] private GameObject startPaparazzi;
+    [SerializeField] private GameObject startCelebrity;
+
     private float countDownStart;
 
     void Start()
@@ -94,10 +99,21 @@ public class GameManagerScript : MonoBehaviour
         if (paparazzi != null) Destroy(paparazzi.gameObject);
 
         Vector3 papaPos = tilemapPath.GetCellCenterWorld(papaStartPos); 
-        Vector3 celebPos = tilemapPath.GetCellCenterWorld(celebStartPos); 
+        Vector3 celebPos = tilemapPath.GetCellCenterWorld(celebStartPos);
 
-        paparazzi = Instantiate(paparazziPrefab, papaPos, Quaternion.Euler(new Vector3(0, 0, 0))).GetComponent<PlayerManager>();
-        celeb = Instantiate(celebPrefab, celebPos, Quaternion.Euler(new Vector3(0, 0, 0))).GetComponent<PlayerManager>();
+        GameObject paparazziGO = PlayerInput.Instantiate(paparazziPrefab, playerIndex: 0, pairWithDevice: Gamepad.current).gameObject;
+        GameObject celebrityGO = PlayerInput.Instantiate(celebPrefab, playerIndex: 1, pairWithDevice: Joystick.current).gameObject;
+
+        paparazziGO.transform.position = papaPos;
+        paparazziGO.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+
+        celebrityGO.transform.position = celebPos;
+        celebrityGO.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+
+        // paparazzi = PlayerInput.Instantiate(paparazziPrefab, papaPos, Quaternion.Euler(new Vector3(0, 0, 0))).GetComponent<PlayerManager>();
+        // celeb = PlayerInput.Instantiate(celebPrefab, celebPos, Quaternion.Euler(new Vector3(0, 0, 0))).GetComponent<PlayerManager>();
+        paparazzi = paparazziGO.GetComponent<PlayerManager>();
+        celeb = celebrityGO.GetComponent<PlayerManager>();
         paparazziAction = paparazzi.GetComponentInChildren<ActionButton>();
         celebAction = celeb.GetComponentInChildren<ActionButton>();
 
@@ -107,16 +123,50 @@ public class GameManagerScript : MonoBehaviour
         celeb.SetObstacleTilemap(obstaclePath);
     }
 
+    public void PlayerIsReady(PlayerInput player)
+    {
+        if (currentState != GameState.START) return;
+        // var player = PlayerInput.FindFirstPairedToDevice(context.control.device);
+
+        if (player.playerIndex == 0)
+        {
+            startPaparazzi.SetActive(false);
+            paparazziIsReady = true;
+        } else if (player.playerIndex == 1) {
+            startCelebrity.SetActive(false);
+            celebrityIsReady = true;
+        }
+    }
+
+    public void PlayerIsNotReady(PlayerInput player)
+    {
+        if (currentState != GameState.START) return;
+/*        var player = PlayerInput.FindFirstPairedToDevice(context.control.device);
+        Debug.Log(player.gameObject.tag);*/
+
+        if (player.playerIndex == 0)
+        {
+            startPaparazzi.SetActive(true);
+            paparazziIsReady = false;
+        }
+        else if (player.playerIndex == 1)
+        {
+            startCelebrity.SetActive(true);
+            celebrityIsReady = false;
+        }
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            currentState = GameState.END;
             StartCoroutine(RestartGame());
         }
 
         if (currentState == GameState.START)
         {   
-            if (Input.GetKeyDown(KeyCode.U))
+/*            if (Input.GetKeyDown(KeyCode.U))
             {
                 // GameObject.Find("StartPaparazzi").GetComponent<TextMeshProUGUI>().text = "Ready";
                 GameObject.Find("StartPaparazzi").SetActive(false);
@@ -137,9 +187,7 @@ public class GameManagerScript : MonoBehaviour
                 // GameObject.Find("StartCelebrity").GetComponent<TextMeshProUGUI>().text = "Press to start";
                 GameObject.Find("StartCelebrity").SetActive(true);
                 celebrityIsReady = false;
-            }
-
-
+            }*/
 
             if(paparazziIsReady && celebrityIsReady)
             {
@@ -173,7 +221,7 @@ public class GameManagerScript : MonoBehaviour
         {
             UpdateUI();
 
-            if (Input.GetKey(KeyCode.U) && Input.GetKey(KeyCode.O) && Input.GetKey(KeyCode.Q) && Input.GetKey(KeyCode.E))
+/*            if (Input.GetKey(KeyCode.U) && Input.GetKey(KeyCode.O) && Input.GetKey(KeyCode.Q) && Input.GetKey(KeyCode.E))
             {
                 resetCount += Time.deltaTime;
                 if (resetCount > 3)
@@ -184,7 +232,7 @@ public class GameManagerScript : MonoBehaviour
             } else
             {
                 resetCount = 0;
-            }
+            }*/
 
             if (celeb.score == pointsToWin || paparazzi.score == pointsToWin)
             {

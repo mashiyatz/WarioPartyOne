@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CelebItems : MonoBehaviour
 {
@@ -33,15 +34,24 @@ public class CelebItems : MonoBehaviour
         yield return new WaitForSeconds(ValueSettings.disguiseBuffTime);
         isVisible = true;
         GetComponent<SpriteRenderer>().color = startColor;
-        
     }
 
-    void Update()
+    public void UseItem(InputAction.CallbackContext context)
     {
-        if (Input.GetKeyDown(KeyCode.Q) && isHoldingItem)
+        if (PlayerInput.FindFirstPairedToDevice(context.control.device) != GetComponent<PlayerInput>()) return;
+        if (context.ReadValueAsButton() && isHoldingItem)
         {
             StartDisguiseActivation();
             isHoldingItem = false;
         }
+    }
+
+    void Update()
+    {
+/*        if (Input.GetKeyDown(KeyCode.Q) && isHoldingItem)
+        {
+            StartDisguiseActivation();
+            isHoldingItem = false;
+        }*/
     }
 }

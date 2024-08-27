@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ActionButton : MonoBehaviour
 {
@@ -13,14 +14,17 @@ public class ActionButton : MonoBehaviour
     // private float reloadTime;
     private bool isReloading = false;
 
-    private float activationTime; 
+    private float activationTime;
+
+    private void Awake()
+    {
+        gmScript = FindObjectOfType<GameManagerScript>();
+    }
 
     private void Start()
     {
         // reloadTime = ValueSettings.cameraReloadTime;
         activationTime = ValueSettings.zoneActivationTime;
-
-        gmScript = FindObjectOfType<GameManagerScript>();
     }
 
     IEnumerator Reload()
@@ -44,10 +48,96 @@ public class ActionButton : MonoBehaviour
         isReloading = false;
     }
 
+    public void PaparazziActionButton(InputAction.CallbackContext context)
+    {
+        if (gmScript.currentState != GameManagerScript.GameState.PLAY) return;
+        if (PlayerInput.FindFirstPairedToDevice(context.control.device) != pm.GetComponent<PlayerInput>()) return;
+        if (context.ReadValueAsButton() && !isReloading) 
+        {
+            if (pm.resources >= 1 && gameObject.GetComponent<Collider2D>().enabled)
+            {
+                if (inRange && target.GetComponent<CelebItems>().CheckIfVisible())
+                {
+                    gmScript.FlashCamera(true);
+                    pm.UpdateScore();
+                    pm.UpdateResource(-1);
+                    StartCoroutine(Reload());
+                }
+                else
+                {
+                    gmScript.FlashCamera(false);
+                    pm.UpdateResource(-1);
+                    StartCoroutine(Reload());
+                }
+
+                if (pm.resources == 0)
+                {
+                    GetComponent<AudioSource>().Play();
+                }
+            }
+        }
+    }
+
+    IEnumerator StartCountdown()
+    {
+        while (pm.slider.value < 1)
+        {
+            pm.slider.value = (Time.time - timeOfPress) / activationTime;
+
+            if (!inRange || !gmScript.goalManager.canCollectGoal) ResetSlider();
+
+            yield return null;
+        }
+
+        ResetSlider();
+        pm.UpdateScore();
+        gmScript.goalManager.StartSelfDestruct();
+    }
+
+    public void CelebrityActionButton(InputAction.CallbackContext context)
+    {
+        if (gmScript.currentState != GameManagerScript.GameState.PLAY) return;
+        if (PlayerInput.FindFirstPairedToDevice(context.control.device) != pm.GetComponent<PlayerInput>()) return;
+        if (context.started && inRange && gmScript.goalManager.canCollectGoal)
+        {
+            if (!pm.slider.gameObject.activeSelf)
+            {
+                timeOfPress = Time.time;
+                pm.slider.value = 0;
+                pm.slider.gameObject.SetActive(true);
+            }
+
+            // how to update
+            /*            pm.slider.value = (Time.time - timeOfPress) / activationTime;
+                        if (pm.slider.value >= 1)
+                        {
+                            pm.UpdateScore();
+                            gmScript.goalManager.StartSelfDestruct();
+                        }*/
+            //
+            StartCoroutine(nameof(StartCountdown));
+        }
+        else if (context.canceled)
+        {
+            ResetSlider();
+            StopCoroutine(nameof(StartCountdown));
+        }
+    }
+
+    private void ResetSlider()
+    {
+        timeOfPress = Time.time;
+        if (pm.slider.gameObject.activeSelf)
+        {
+            pm.slider.value = 0;
+            pm.slider.gameObject.SetActive(false);
+        }
+    }
+
     private void Update()
     {
 
-        if (transform.parent.CompareTag("Paparazzi"))
+        /*if (transform.parent.CompareTag("Paparazzi"))
         {
             if (Input.GetKeyDown(pm.actionKey) && !isReloading)
             {
@@ -99,7 +189,7 @@ public class ActionButton : MonoBehaviour
                 pm.slider.gameObject.SetActive(false);
             }
 
-        }
+        }*/
     }
 
     public bool CheckIfInRange()

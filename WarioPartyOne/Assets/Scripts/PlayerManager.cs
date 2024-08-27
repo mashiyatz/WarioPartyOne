@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Tilemaps;
+using UnityEngine.InputSystem;
+using static GameManagerScript;
+using UnityEngine.InputSystem.Users;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -15,7 +18,7 @@ public class PlayerManager : MonoBehaviour
     public KeyCode actionKey;
 
     public float rotationSpeed;
-    private float movementSpeed;
+    public float movementSpeed;
 
     public int score;
     public float resources;
@@ -41,10 +44,13 @@ public class PlayerManager : MonoBehaviour
 
     private bool canMove = true;
 
+    private Vector2 moveInput = new();
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+
         cam = Camera.main;
         score = 0;
         resources = 3;
@@ -52,7 +58,7 @@ public class PlayerManager : MonoBehaviour
         SetButtonConfig();
         SetSlider();
         target.SetActive(true);
-        StartCoroutine(TurnOffTargetAfterSeconds());
+        StartCoroutine(TurnOffTargetAfterSeconds());        
     }
 
     public void StartSpeedUp()
@@ -148,14 +154,22 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    public void UpdateMoveInput(InputAction.CallbackContext context)
+    {
+        if (PlayerInput.FindFirstPairedToDevice(context.control.device) == GetComponent<PlayerInput>()) moveInput = context.ReadValue<Vector2>();
+        // Debug.Log(moveInput);    
+    }
+
     private void TileBasedMove()
     {
         direction = Vector3Int.zero;
 
-        if (Input.GetKey(upKey)) direction = Vector3Int.up;
-        if (Input.GetKey(downKey)) direction = Vector3Int.down;
-        if (Input.GetKey(leftKey)) direction = Vector3Int.left;
-        if (Input.GetKey(rightKey)) direction = Vector3Int.right;
+        if (moveInput.y > 0.5f) direction = Vector3Int.up;
+        else if (moveInput.y < -0.5f) direction = Vector3Int.down;
+        if (moveInput.x < -0.5f) direction = Vector3Int.left;
+        else if (moveInput.x > 0.5f) direction = Vector3Int.right;
+
+        if (gameObject.CompareTag("Paparazzi")) direction *= -1;
 
         if (direction != Vector3Int.zero)
         {
@@ -302,6 +316,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (tileMap == null) return;
         if (canMove) TileBasedMove();
+
         if (gameObject.CompareTag("Celebrity"))
         {
             slider.transform.position = cam.WorldToScreenPoint(rb.position + 0.25f * Vector2.up);

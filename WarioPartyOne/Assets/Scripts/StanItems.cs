@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class StanItems : MonoBehaviour
@@ -68,15 +69,25 @@ public class StanItems : MonoBehaviour
         lowBatteryIndicator.SetActive(false);
     }
 
-    void Update()
+    public void UseItem(InputAction.CallbackContext context)
     {
-        if (!GetComponent<PlayerManager>().enabled) return;
-
-        if (Input.GetKeyDown(KeyCode.O) && isHoldingItem)
+        if (PlayerInput.FindFirstPairedToDevice(context.control.device) != GetComponent<PlayerInput>()) return;
+        if (context.ReadValueAsButton() && isHoldingItem)
         {
             ActivateNewCamera();
             isHoldingItem = false;
         }
+    }
+
+    void Update()
+    {
+        if (!GetComponent<PlayerManager>().enabled) return;
+
+/*        if (Input.GetKeyDown(KeyCode.O) && isHoldingItem)
+        {
+            ActivateNewCamera();
+            isHoldingItem = false;
+        }*/
 
         if (GetComponent<PlayerManager>().resources == 0)
         {
