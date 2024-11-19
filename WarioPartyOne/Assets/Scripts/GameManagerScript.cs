@@ -118,24 +118,20 @@ public class GameManagerScript : MonoBehaviour
         {   
             if (Input.GetKeyDown(KeyCode.U))
             {
-                // GameObject.Find("StartPaparazzi").GetComponent<TextMeshProUGUI>().text = "Ready";
-                GameObject.Find("StartPaparazzi").SetActive(false);
+
                 paparazziIsReady = true;
             } else if (Input.GetKeyDown(KeyCode.O)) {
-                // GameObject.Find("StartPaparazzi").GetComponent<TextMeshProUGUI>().text = "Press to start";
-                GameObject.Find("StartPaparazzi").SetActive(true);
+
                 paparazziIsReady = false;
             }
 
             if(Input.GetKeyDown(KeyCode.E))
             {
-                // GameObject.Find("StartCelebrity").GetComponent<TextMeshProUGUI>().text = "Ready";
-                GameObject.Find("StartCelebrity").SetActive(false);
+
                 celebrityIsReady = true;
             } else if (Input.GetKeyDown(KeyCode.Q))
             {
-                // GameObject.Find("StartCelebrity").GetComponent<TextMeshProUGUI>().text = "Press to start";
-                GameObject.Find("StartCelebrity").SetActive(true);
+
                 celebrityIsReady = false;
             }
 

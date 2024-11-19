@@ -15,7 +15,7 @@ public class PlayerManager : MonoBehaviour
     public KeyCode actionKey;
 
     public float rotationSpeed;
-    private float movementSpeed;
+    public float movementSpeed;
 
     public int score;
     public float resources;
